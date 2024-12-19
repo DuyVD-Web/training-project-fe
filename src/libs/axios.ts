@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig} from 'axios'
-import {ErrorResponse, RequestMethod} from "./commons.ts";
+import {ErrorResponse, RequestMethod} from "./types/types.ts";
 import Cookies from "universal-cookie";
-import {NavigateFunction} from "react-router";
+import {redirect} from "react-router";
 
 
 const instance = axios.create({
@@ -10,8 +10,6 @@ const instance = axios.create({
 })
 // TODO: Store in somewhere else
 const cookies = new Cookies();
-
-let navigateFunc: NavigateFunction;
 
 instance.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
@@ -31,9 +29,8 @@ instance.interceptors.response.use(
     async (error: AxiosError) => {
         // Handle 401 Unauthorized error
         if (error.response?.status === 401) {
-
             cookies.remove('authToken');
-            navigateFunc('/login');
+            return redirect("/login");
         }
 
         return Promise.reject(error);
@@ -48,6 +45,9 @@ const baseRequest = async (
     config?: AxiosRequestConfig,
 ) => {
     try {
+        if (!config) {
+            config = {};
+        }
         const response = await instance({
             ...config,
             method: method,
@@ -58,7 +58,8 @@ const baseRequest = async (
         return response.data;
     } catch (e) {
         const error = e as AxiosError<ErrorResponse>;
-        const requestError: ErrorResponse = {};
+        const requestError: ErrorResponse = { status: false};
+
         if (error.response) {
             // Server responded with an error
             const errorData = error.response.data;
@@ -66,13 +67,12 @@ const baseRequest = async (
             requestError.message = errorData.message;
             requestError.errors = errorData.errors || {};
             requestError.code = errorData.code || error.response.status;
-
         } else {
             requestError.status = false;
             requestError.message = error.message || 'Network error occurred';
             requestError.code = error.code || 500;
         }
-        return Promise.reject(requestError)
+        return requestError;
     }
 };
 

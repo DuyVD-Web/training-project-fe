@@ -1,7 +1,7 @@
 export type RequestMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 export type ErrorResponse = {
-    status?: boolean;
+    status: boolean;
     message?: string;
     errors?: Record<string, string[]>;
     code?: number | string;
