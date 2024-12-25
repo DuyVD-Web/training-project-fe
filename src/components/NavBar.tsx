@@ -1,29 +1,27 @@
 import {Link, useNavigate} from "react-router";
-import {getCookie} from "../utils/Cookie.ts";
 import NavButton from "./NavButton.tsx";
 import baseRequest from "../libs/axios.ts";
-import {useEffect, useState} from "react";
+import {useAuth, useToast} from "../layouts/AppProvider.tsx";
 
 
 export const NavBar = () => {
-    const [isLoggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = getCookie('authToken');
-        setLoggedIn(!!token);
-    }, []);
+    const {isLoggedIn, logout} = useAuth();
+    const {showToast} = useToast();
 
     async function handleLogout() {
         const response = await baseRequest("post", "/api/logout");
         if (response.status === true) {
+            logout();
             navigate('/');
+            showToast("Logged out successfully.");
         } else if (response.code === 500) {
-            console.log(response.message);
+            showToast(response.message, "error");
         } else if (response.request) {
-            console.log(response.message);
+            showToast(response.message, "error");
         } else {
-            console.log(response.message);
+            showToast(response.message, "error");
         }
     }
 

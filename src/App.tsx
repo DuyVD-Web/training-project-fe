@@ -1,13 +1,16 @@
 import './App.css'
 import {Router} from "./router.tsx";
 import {BrowserRouter} from "react-router";
+import {AppProvider} from "./layouts/AppProvider.tsx";
 
 
 function App() {
     return (
-        <BrowserRouter>
-            <Router/>
-        </BrowserRouter>
+        <AppProvider>
+            <BrowserRouter>
+                <Router/>
+            </BrowserRouter>
+        </AppProvider>
     )
 }
 
