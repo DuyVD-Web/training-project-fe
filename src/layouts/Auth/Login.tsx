@@ -2,8 +2,8 @@ import {Link, useNavigate} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
 import baseRequest from "../../libs/axios.ts";
 import {useState} from "react";
-import {getCookie} from "../../utils/Cookie.ts";
 import {useAuth, useToast} from "../AppProvider.tsx";
+import {emailRegex} from "../../libs/constants/regex.ts";
 
 type LoginFormInput = {
     email: string;
@@ -17,14 +17,11 @@ export const Login = () => {
     const { login } = useAuth();
     const { showToast } = useToast();
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
     const onSubmit: SubmitHandler<LoginFormInput> = async data => {
         setApiError("");
         const response = await baseRequest("post", "/api/login", data);
         if (response.status === true) {
             login(response.data.token);
-            console.log(getCookie("authToken"));
             showToast("Login successful!");
             navigate('/');
         } else if (response.code === 403) {

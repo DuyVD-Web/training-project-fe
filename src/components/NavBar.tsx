@@ -25,6 +25,14 @@ export const NavBar = () => {
         }
     }
 
+    const toLogin = () => {
+        navigate("/login")
+    }
+
+    function toSignup() {
+        navigate("/signup")
+    }
+
     return (
         <header
             className='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide fixed z-50 w-full top-0'>
@@ -35,8 +43,8 @@ export const NavBar = () => {
                         <NavButton value={'Logout'} onClick={handleLogout}/>
                         :
                         <>
-                            <NavButton value={'Login'} href={'/login'}/>
-                            <NavButton value={'Signup'} href={'/signup'}/>
+                            <NavButton value={'Login'} onClick={toLogin}/>
+                            <NavButton value={'Signup'} onClick={toSignup}/>
                         </>
                     }
                 </div>
