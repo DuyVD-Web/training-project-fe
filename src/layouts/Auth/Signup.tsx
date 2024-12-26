@@ -24,7 +24,7 @@ export const Signup = () => {
             Object.keys(errors).forEach((field) => {
                 if (field === "password" && errors[field][0].includes("confirmation")) {
                     setError("password_confirmation", {
-                        message: "The password confirmation does not match."
+                        message: errors[field][0]
                     });
                 } else {
                     setError(field as keyof SignupFormInput, {

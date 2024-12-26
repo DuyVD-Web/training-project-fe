@@ -29,7 +29,7 @@ export const NavBar = () => {
         navigate("/login")
     }
 
-    function toSignup() {
+    const toSignup = () => {
         navigate("/signup")
     }
 
@@ -39,7 +39,7 @@ export const NavBar = () => {
             <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
                 <Link to="/">Logo</Link>
                 <div className='flex max-lg:ml-auto space-x-3'>
-                    { isLoggedIn ?
+                    {isLoggedIn ?
                         <NavButton value={'Logout'} onClick={handleLogout}/>
                         :
                         <>
