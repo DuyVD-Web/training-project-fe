@@ -43,9 +43,23 @@ export type LoginAction = {
     payload: string;
 };
 
+
+
 export type LogoutAction = {
     type: typeof AUTH_ACTIONS.LOGOUT;
 };
+
+export type LoginFormInput = {
+    email: string;
+    password: string;
+}
+
+export type SignupFormInput = {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
 
 export type AuthAction =
     | { type: typeof AUTH_ACTIONS.LOGIN, payload: string }

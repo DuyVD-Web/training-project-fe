@@ -4,18 +4,15 @@ import baseRequest from "../../libs/axios.ts";
 import {useState} from "react";
 import {useAuth, useToast} from "../AppProvider.tsx";
 import {emailRegex} from "../../libs/constants/regex.ts";
+import {LoginFormInput} from "../../libs/types/types.ts";
 
-type LoginFormInput = {
-    email: string;
-    password: string;
-}
 
 export const Login = () => {
     const navigate = useNavigate();
     const {register, handleSubmit, formState: {errors}, setError} = useForm<LoginFormInput>();
     const [apiError, setApiError] = useState<string>("");
-    const { login } = useAuth();
-    const { showToast } = useToast();
+    const {login} = useAuth();
+    const {showToast} = useToast();
 
     const onSubmit: SubmitHandler<LoginFormInput> = async data => {
         setApiError("");
@@ -26,11 +23,8 @@ export const Login = () => {
             navigate('/');
         } else if (response.code === 403) {
             setError("email", {
-                type: "manual",
                 message: "Invalid email or password"
             })
-        } else if (response.request) {
-            setApiError("Unable to connect to the server");
         } else {
             setApiError("An unexpected error occurred");
         }
