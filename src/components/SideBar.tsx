@@ -18,18 +18,40 @@ const StyledNavLink = ({ to, children }: { to: string; children: string }) => {
     );
 };
 
-function SideBar() {
+const UserNav = () => {
+    return (<ul>
+        <li>
+            <StyledNavLink to={"/user/info"} children={"Account Information"}/>
+        </li>
+        <li>
+            <StyledNavLink to={"/user/history"} children={"Activity History"}/>
+        </li>
+    </ul>);
+}
+
+const AdminNav = () => {
+    return (<ul>
+        <li>
+            <StyledNavLink to={"/user/info"} children={"Users"}/>
+        </li>
+        <li>
+            <StyledNavLink to={"/user/history"} children={"Users Import State"}/>
+        </li>
+        <li>
+            <StyledNavLink to={"/user/history"} children={"Permissions Management"}/>
+        </li>
+    </ul>);
+}
+
+function SideBar({ role }: { role: string }) {
+
     return (
         <nav
             className="bg-white shadow-lg h-screen fixed top-0 left-0 min-w-[240px] py-6 px-4 font-[sans-serif] overflow-auto mt-16">
-            <ul>
-                <li>
-                    <StyledNavLink to={"/user/info"} children={"Account Information"} />
-                </li>
-                <li>
-                    <StyledNavLink to={"/user/history"} children={"Activity History"} />
-                </li>
-            </ul>
+            {role === "user" ?
+                <UserNav/> :
+                <AdminNav/>
+            }
         </nav>
     );
 }

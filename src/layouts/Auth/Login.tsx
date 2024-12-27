@@ -2,7 +2,7 @@ import {Link, useNavigate} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
 import baseRequest from "../../libs/axios.ts";
 import {useState} from "react";
-import {useAuth, useToast} from "../AppProvider.tsx";
+import {useAuth, useToast, useUser} from "../AppProvider.tsx";
 import {emailRegex} from "../../libs/constants/regex.ts";
 import {LoginFormInput} from "../../libs/types/types.ts";
 
@@ -13,6 +13,7 @@ export const Login = () => {
     const [apiError, setApiError] = useState<string>("");
     const {login} = useAuth();
     const {showToast} = useToast();
+    const {setUserInfo} = useUser();
 
     const onSubmit: SubmitHandler<LoginFormInput> = async data => {
         setApiError("");
@@ -20,6 +21,7 @@ export const Login = () => {
         if (response.status === true) {
             login(response.data.token);
             showToast("Login successful!");
+            setUserInfo(response.data.user);
             navigate('/');
         } else if (response.code === 403) {
             setError("email", {

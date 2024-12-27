@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useContext, useReducer} from 'react';
+import {createContext, ReactNode, useContext, useReducer, useState} from 'react';
 import {getCookie, removeCookie, setCookie} from "../utils/Cookie";
 import Toast from "../components/Toast";
 import {AUTH_ACTIONS} from "../libs/constants/auth.ts";
@@ -9,8 +9,12 @@ import {
     ToastAction,
     ToastContextType,
     ToastState,
-    ToastType
+    ToastType, UserContextType
 } from "../libs/types/types.ts";
+import {UserInfor} from "../libs/types/user.ts";
+
+
+
 
 
 // Reducers
@@ -49,6 +53,7 @@ const toastReducer = (state: ToastState, action: ToastAction): ToastState => {
 // Context
 const AuthContext = createContext<AuthContextType | null>(null);
 const ToastContext = createContext<ToastContextType | null>(null);
+const UserContext = createContext<UserContextType | null>(null);
 
 // Provider Props
 interface ProviderProps {
@@ -59,6 +64,11 @@ export function AppProvider({children}: ProviderProps) {
     const [authState, authDispatch] = useReducer(authReducer, {
         isLoggedIn: Boolean(getCookie("authToken"))
     });
+    const [user, setUser] = useState<UserInfor | null>(null);
+
+    const setUserInfo = (user: UserInfor | null) => {
+        setUser(user);
+    }
 
     const [toastState, toastDispatch] = useReducer(toastReducer, {
         visible: false,
@@ -91,22 +101,28 @@ export function AppProvider({children}: ProviderProps) {
             login,
             logout
         }}>
-            <ToastContext.Provider value={{
-                showToast,
-                hideToast
+            <UserContext.Provider value={{
+                user,
+                setUserInfo
             }}>
-                {toastState.visible && (
-                    <Toast
-                        message={toastState.message}
-                        type={toastState.type}
-                        onClose={hideToast}
-                    />
-                )}
-                {children}
-            </ToastContext.Provider>
+                <ToastContext.Provider value={{
+                    showToast,
+                    hideToast
+                }}>
+                    {toastState.visible && (
+                        <Toast
+                            message={toastState.message}
+                            type={toastState.type}
+                            onClose={hideToast}
+                        />
+                    )}
+                    {children}
+                </ToastContext.Provider>
+            </UserContext.Provider>
         </AuthContext.Provider>
     );
 }
+
 
 // Hooks
 export function useAuth() : AuthContextType {
@@ -115,4 +131,8 @@ export function useAuth() : AuthContextType {
 
 export function useToast() : ToastContextType {
     return useContext(ToastContext) as ToastContextType;
+}
+
+export function useUser() : UserContextType {
+    return useContext(UserContext) as UserContextType;
 }
