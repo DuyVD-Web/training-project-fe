@@ -41,3 +41,8 @@ export type ChangeAvatarResponse = {
     avatar: string;
   };
 };
+
+export type AvatarUploadProps = {
+  currentAvatar?: string;
+  onSave: (newAvatarUrl: string) => void;
+};
