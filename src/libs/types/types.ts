@@ -1,4 +1,5 @@
 import {AUTH_ACTIONS} from "../constants/auth.ts";
+import {UserInfor} from "./user.ts";
 
 export type RequestMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
@@ -10,7 +11,6 @@ export type ErrorResponse = {
 };
 
 export type ToastType = "success" | "error";
-
 
 export type PaginationResponse = {
     status: boolean;
@@ -33,7 +33,6 @@ export type PaginationResponse = {
     };
 };
 
-
 export type AuthState = {
     isLoggedIn: boolean;
 };
@@ -42,8 +41,6 @@ export type LoginAction = {
     type: typeof AUTH_ACTIONS.LOGIN;
     payload: string;
 };
-
-
 
 export type LogoutAction = {
     type: typeof AUTH_ACTIONS.LOGOUT;
@@ -63,7 +60,7 @@ export type SignupFormInput = {
 
 export type AuthAction =
     | { type: typeof AUTH_ACTIONS.LOGIN, payload: string }
-    | { type: typeof AUTH_ACTIONS.LOGOUT };
+    | { type: typeof AUTH_ACTIONS.LOGOUT, payload?: string };
 
 export type ToastState = {
     visible: boolean;
@@ -80,6 +77,8 @@ export type AuthContextType = {
     login: (token: string) => void;
     logout: () => void;
 };
+
+export type UserContextType = { user: UserInfor | null, setUserInfo: (user: UserInfor|null) => void };
 
 export type ToastContextType = {
     showToast: (message: string, type?: ToastType) => void;
