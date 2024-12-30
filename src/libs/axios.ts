@@ -27,8 +27,9 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     async (response) => Promise.resolve(response),
     async (error: AxiosError) => {
-        // Handle 401 Unauthorized error
-        if (error.response?.status === 401) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        if (error.response?.data?.code === 401) {
             cookies.remove('authToken');
             return redirect("/login");
         }

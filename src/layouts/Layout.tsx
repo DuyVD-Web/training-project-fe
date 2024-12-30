@@ -3,7 +3,6 @@ import { NavBar } from "../components/NavBar.tsx";
 import SideBar from "../components/SideBar.tsx";
 import { useAuth, useUser } from "./AppProvider.tsx";
 import { getUser } from "../libs/user/user.ts";
-import useQuery from "../libs/hooks/useQuery.ts";
 
 function Layout(props: { children: ReactElement }) {
   const { user, setUserInfo } = useUser();
