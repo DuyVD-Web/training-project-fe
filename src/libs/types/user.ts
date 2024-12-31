@@ -22,9 +22,8 @@ export type ChangePasswordFormInput = {
 };
 
 export type ChangeEmailFormInput = {
-  current_password: string;
+  email: string;
   password: string;
-  password_confirmation: string;
 };
 
 export type InformationForm = {

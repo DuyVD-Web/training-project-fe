@@ -20,7 +20,7 @@ export const Signup = () => {
 
   const onSubmit: SubmitHandler<SignupFormInput> = async (data) => {
     setApiError("");
-    const response = await baseRequest("post", "/api/register", data);
+    const response = await baseRequest("post", "/register", data);
     if (response.status === true) {
       showToast("Register successful!");
       navigate("/login");

@@ -17,7 +17,7 @@ import Avatar from "./Avatar.tsx";
 
 const UserInformation = () => {
   const [isEditing, setEditing] = useState(false);
-  const [currenForm, setCurrenForm] = useState<InformationForm>();
+  const [currenForm, setCurrenForm] = useState<InformationForm | null>(null);
   const {
     register,
     handleSubmit,
@@ -128,20 +128,22 @@ const UserInformation = () => {
   }, [isEditing, currenForm]);
 
   function handleAvatarSave(newAvatarUrl: string): void {
-    setCurrenForm({
-      ...currenForm,
-      email: currenForm.email,
-      name: currenForm.name,
-      phoneNumber: currenForm.phoneNumber?.toString(),
-      address: currenForm.address,
-      avatar: newAvatarUrl,
-    });
+    if (currenForm) {
+      setCurrenForm({
+        ...currenForm,
+        email: currenForm.email,
+        name: currenForm.name,
+        phoneNumber: currenForm.phoneNumber?.toString(),
+        address: currenForm.address,
+        avatar: newAvatarUrl,
+      });
+    }
   }
 
   return (
     <>
       <div className="col-start-2 col-end-4 relative">
-        {currenForm ? (
+        {currenForm && currenForm.avatar ? (
           <Avatar currentAvatar={currenForm.avatar} onSave={handleAvatarSave} />
         ) : (
           ""

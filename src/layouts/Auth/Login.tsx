@@ -21,7 +21,7 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     setApiError("");
-    const response = await baseRequest("post", "/api/login", data);
+    const response = await baseRequest("post", "/login", data);
     if (response.status === true) {
       login(response.data.token);
       showToast("Login successful!");

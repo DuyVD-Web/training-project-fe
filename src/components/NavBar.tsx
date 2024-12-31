@@ -13,8 +13,6 @@ export const NavBar = () => {
     const response = await baseRequest("post", "/api/logout");
     if (response.code === 500) {
       showToast(response.message, "error");
-    } else if (response.request) {
-      showToast(response.message, "error");
     } else {
       showToast(response.message, "error");
     }

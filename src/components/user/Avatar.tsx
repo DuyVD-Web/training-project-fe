@@ -40,12 +40,13 @@ const Avatar: React.FC<AvatarUploadProps> = ({ currentAvatar, onSave }) => {
         try {
           const result = await updateAvatar(formData);
 
-          if (result.status) {
+          if (!result.status) {
+            throw new Error(result.message);
+          }
+          if ("data" in result) {
             onSave(result.data.avatar);
             setIsEditing(false);
             setImage(null);
-          } else {
-            throw new Error(result.message);
           }
         } catch (error) {
           setError(

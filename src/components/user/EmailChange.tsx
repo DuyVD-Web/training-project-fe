@@ -16,17 +16,16 @@ const EmailChange = () => {
 
   const onSubmit: SubmitHandler<ChangeEmailFormInput> = async (data) => {
     const response = await changeEmail(data);
+    if ("errors" in response && response.errors) {
+      Object.keys(response.errors).forEach((field) => {
+        setError(field as keyof ChangeEmailFormInput, {
+          message: response.errors![field][0],
+        });
+      });
+    }
     if (response.status === true) {
       showToast("Change email link sended.");
       reset();
-    } else if ("errors" in response) {
-      if (response.errors) {
-        Object.keys(response.errors).forEach((field) => {
-          setError(field as keyof ChangeEmailFormInput, {
-            message: response.errors![field][0],
-          });
-        });
-      }
     }
   };
 
