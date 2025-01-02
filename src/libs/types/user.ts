@@ -51,7 +51,7 @@ export type AccessHistoryState = {
   year?: string;
   month?: string;
   day?: string;
-  sort: "asc" | "desc";
+  asc: boolean;
   page: number;
   years: string[];
   lastPage: number;
@@ -63,7 +63,7 @@ export type AccessHistoryState = {
 
 export type History = {
   type: string;
-  ip_address: string;
+  ipAddress: string;
   browser: string;
   platform: string;
   device: string;

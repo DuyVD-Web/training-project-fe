@@ -103,3 +103,25 @@ export type PaginationProps = {
   to: number;
   onPageChange: (page: number) => void;
 };
+
+export type TableProps<T> = {
+  columns: ColumnProps[];
+  pagination: {
+    data: T[];
+    currentPage: number;
+    lastPage: number;
+    total: number;
+    from: number;
+    to: number;
+    onPageChange: (page: number) => void;
+  };
+};
+
+export type ColumnProps = {
+  title: string;
+  key: string;
+  sort?: {
+    asc: boolean;
+    onClick: () => void;
+  };
+};

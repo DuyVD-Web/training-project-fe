@@ -1,18 +1,59 @@
 import { useEffect, useState } from "react";
 import { getHistory } from "../../libs/user/user";
 import { AccessHistoryState, History } from "../../libs/types/user";
-import PaginationLink from "../PaginationLink";
 import { useToast } from "../../layouts/AppProvider";
+import Table from "../Table";
+import { ColumnProps } from "../../libs/types/types";
+import ReactLoading from "react-loading";
 
 const AccessHistory = () => {
   const [currentParams, setParams] = useState<AccessHistoryState>();
   const [currentQuery, setQuery] = useState<string>("");
   const [histories, setHistories] = useState<History[]>([]);
   const { showToast } = useToast();
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const columns: ColumnProps[] = [
+    {
+      title: "Type",
+      key: "type",
+    },
+    {
+      title: "IP Address",
+      key: "ipAddress",
+    },
+    {
+      title: "Browser",
+      key: "browser",
+    },
+    {
+      title: "Platform",
+      key: "platform",
+    },
+    {
+      title: "Device",
+      key: "device",
+    },
+    {
+      title: "Time",
+      key: "time",
+      sort: {
+        asc: currentParams?.asc,
+        onClick: () => handleSort(),
+      },
+    },
+  ];
+
+  const getParams = () => {
+    const current = new URLSearchParams(window.location.search);
+    return "?" + current.toString();
+  };
 
   useEffect(() => {
     const getAccessHistory = async () => {
-      const result = await getHistory(currentQuery);
+      setLoading(true);
+
+      const result = await getHistory(getParams());
       if ("errors" in result) {
         showToast("Something went wrong", "error");
       }
@@ -24,7 +65,7 @@ const AccessHistory = () => {
           year: result.data.currentYear,
           month: result.data.currentMonth,
           day: result.data.currentDay,
-          sort: result.data.sort,
+          asc: result.data.sort === "asc" ? true : false,
           page: result.data.meta.currentPage,
           years: result.data.years,
           lastPage: result.data.meta.lastPage,
@@ -35,9 +76,24 @@ const AccessHistory = () => {
         });
         setHistories(result.data.histories);
       }
+      setLoading(false);
     };
     getAccessHistory();
   }, [currentQuery]);
+
+  const onChangePage = (page: number) => {
+    if (currentParams) {
+      const newParams = {
+        ...currentParams,
+        page: page,
+      };
+      setParams({
+        ...currentParams,
+        page: page,
+      });
+      updateQuery(newParams);
+    }
+  };
 
   const updateQuery = (params: AccessHistoryState) => {
     const query: string[] = [];
@@ -49,12 +105,14 @@ const AccessHistory = () => {
     if (params.year) query.push(`year=${params.year}`);
     if (params.month) query.push(`month=${params.month}`);
     if (params.day) query.push(`day=${params.day}`);
-    if (params.sort) query.push(`sort=${params.sort}`);
+    if (params.asc) query.push(`sort=${params.asc ? "asc" : "desc"}`);
     if (params.page) query.push(`page=${params.page}`);
 
     query.push("field=time");
 
-    setQuery(`?${query.join("&")}`);
+    const newQuery = `?${query.join("&")}`;
+    window.history.pushState({}, "", newQuery);
+    setQuery(newQuery);
   };
 
   const handleDateChange = (field: "year" | "month" | "day", value: string) => {
@@ -102,11 +160,11 @@ const AccessHistory = () => {
     if (currentParams) {
       const newParams = {
         ...currentParams,
-        sort: currentParams.sort === "asc" ? "desc" : currentParams.sort,
+        asc: !currentParams.asc,
       };
       setParams({
         ...currentParams,
-        sort: currentParams.sort === "asc" ? "desc" : "asc",
+        asc: !currentParams.asc,
       });
       updateQuery(newParams);
     }
@@ -118,189 +176,139 @@ const AccessHistory = () => {
         <div className="p-4 flex justify-between items-center">
           <h1 className="text-3xl">Access History</h1>
         </div>
+        {isLoading ? (
+          <div className="flex justify-items-center align-middle w-full h-full">
+            <ReactLoading
+              type={"spin"}
+              color={"#3b82f6"}
+              height={50}
+              width={50}
+            />
+          </div>
+        ) : (
+          <>
+            <div className="p-4 flex justify-between items-center">
+              <div className="flex gap-1 items-center w-[50%]">
+                <select
+                  name="year"
+                  id="year"
+                  className="w-[30%] border-2 border-gray-400 rounded py-1"
+                  value={currentParams?.year || ""}
+                  onChange={(e) => handleDateChange("year", e.target.value)}
+                >
+                  <option value=""></option>
+                  {currentParams
+                    ? currentParams.years.map((year) => (
+                        <option
+                          key={year}
+                          value={year}
+                          selected={currentParams.year === year}
+                        >
+                          {year}
+                        </option>
+                      ))
+                    : ""}
+                </select>
 
-        <div className="p-4 flex justify-between items-center">
-          <div className="flex gap-1 items-center w-[50%]">
-            <select
-              name="year"
-              id="year"
-              className="w-[30%] border-2 border-gray-400 rounded py-1"
-              value={currentParams?.year || ""}
-              onChange={(e) => handleDateChange("year", e.target.value)}
-            >
-              <option value=""></option>
-              {currentParams
-                ? currentParams.years.map((year) => (
+                <select
+                  name="month"
+                  id="month"
+                  className="w-[20%] border-2 border-gray-400 rounded py-1"
+                  value={currentParams?.month || ""}
+                  onChange={(e) => handleDateChange("month", e.target.value)}
+                >
+                  <option value=""></option>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                     <option
-                      key={year}
-                      value={year}
-                      selected={currentParams.year === year}
+                      key={month}
+                      value={month}
+                      selected={currentParams?.month === month.toString()}
                     >
-                      {year}
+                      {new Date(2024, month - 1).toLocaleString("default", {
+                        month: "long",
+                      })}
                     </option>
-                  ))
-                : ""}
-            </select>
+                  ))}
+                </select>
 
-            <select
-              name="month"
-              id="month"
-              className="w-[20%] border-2 border-gray-400 rounded py-1"
-              value={currentParams?.month || ""}
-              onChange={(e) => handleDateChange("month", e.target.value)}
-            >
-              <option value=""></option>
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                <option
-                  key={month}
-                  value={month}
-                  selected={currentParams?.month === month.toString()}
+                <select
+                  name="day"
+                  id="day"
+                  className="w-[10%] border-2 border-gray-400 rounded py-1"
+                  value={currentParams?.day || ""}
+                  onChange={(e) => handleDateChange("day", e.target.value)}
                 >
-                  {new Date(2024, month - 1).toLocaleString("default", {
-                    month: "long",
-                  })}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="day"
-              id="day"
-              className="w-[10%] border-2 border-gray-400 rounded py-1"
-              value={currentParams?.day || ""}
-              onChange={(e) => handleDateChange("day", e.target.value)}
-            >
-              <option value=""></option>
-              {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                <option
-                  key={day}
-                  value={day}
-                  selected={currentParams?.day === day.toString()}
-                >
-                  {day}
-                </option>
-              ))}
-            </select>
-
-            <button
-              className="bg-blue-500 text-white px-2 py-1 rounded"
-              onClick={handleSearch}
-            >
-              Search
-            </button>
-          </div>
-
-          <div className="flex items-center border-2 border-gray-500 bg-white w-fit ml-4 p-4 shadow-md">
-            <input
-              id="login"
-              type="checkbox"
-              value="login"
-              checked={currentParams?.types.includes("login")}
-              onChange={(e) => handleTypeFilter("login", e.target.checked)}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label
-              htmlFor="login"
-              className="ms-2 text-sm font-medium text-gray-900"
-            >
-              Login
-            </label>
-
-            <input
-              id="logout"
-              type="checkbox"
-              value="logout"
-              checked={currentParams?.types.includes("logout")}
-              onChange={(e) => handleTypeFilter("logout", e.target.checked)}
-              className="ml-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label
-              htmlFor="logout"
-              className="ms-2 text-sm font-medium text-gray-900"
-            >
-              Logout
-            </label>
-          </div>
-        </div>
-
-        <div className="px-3 py-4 flex flex-col justify-between h-3/4">
-          <table className="w-full text-md bg-white shadow-md rounded mb-4 border-t-2">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-3 px-5">
-                  <div className="inline-block">Type</div>
-                </th>
-                <th className="text-left p-3 px-5">
-                  <div className="inline-block">IP Address</div>
-                </th>
-                <th className="text-left p-3 px-5">Browser</th>
-                <th className="text-left p-3 px-5">Platform</th>
-                <th className="text-left p-3 px-5">Device</th>
-                <th className="text-left p-3 px-5">
-                  <div className="inline-block">Time</div>
-                  <button
-                    onClick={() => handleSort()}
-                    className="sort-btn"
-                    data-order={currentParams?.sort}
-                  >
-                    <svg
-                      className={`w-3 h-3 text-gray-800
-                         dark:text-white inline transition-transform duration-300 ${
-                           currentParams?.sort === "desc" ? "rotate-180" : ""
-                         }`}
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 14 8"
+                  <option value=""></option>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                    <option
+                      key={day}
+                      value={day}
+                      selected={currentParams?.day === day.toString()}
                     >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"
-                      />
-                    </svg>
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {histories.map((history, index) => (
-                <tr key={index} className="border-b bg-gray-100">
-                  <td className="p-3 px-5">{history.type}</td>
-                  <td className="p-3 px-5">{history.ip_address}</td>
-                  <td className="p-3 px-5">{history.browser}</td>
-                  <td className="p-3 px-5">{history.platform}</td>
-                  <td className="p-3 px-5">{history.device}</td>
-                  <td className="p-3 px-5">{history.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {currentParams ? (
-            <PaginationLink
-              currentPage={currentParams.page}
-              lastPage={currentParams.lastPage}
-              total={currentParams.total}
-              from={currentParams.from}
-              to={currentParams.to}
-              onPageChange={function (page: number): void {
-                const newParams = {
-                  ...currentParams,
-                  page: page,
-                };
-                setParams({
-                  ...currentParams,
-                  page: page,
-                });
-                updateQuery(newParams);
-              }}
-            />
-          ) : (
-            ""
-          )}
-        </div>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  onClick={handleSearch}
+                >
+                  Search
+                </button>
+              </div>
+
+              <div className="flex items-center border-2 border-gray-500 bg-white w-fit ml-4 p-4 shadow-md">
+                <input
+                  id="login"
+                  type="checkbox"
+                  value="login"
+                  checked={currentParams?.types.includes("login")}
+                  onChange={(e) => handleTypeFilter("login", e.target.checked)}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label
+                  htmlFor="login"
+                  className="ms-2 text-sm font-medium text-gray-900"
+                >
+                  Login
+                </label>
+
+                <input
+                  id="logout"
+                  type="checkbox"
+                  value="logout"
+                  checked={currentParams?.types.includes("logout")}
+                  onChange={(e) => handleTypeFilter("logout", e.target.checked)}
+                  className="ml-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label
+                  htmlFor="logout"
+                  className="ms-2 text-sm font-medium text-gray-900"
+                >
+                  Logout
+                </label>
+              </div>
+            </div>
+
+            <div className="px-3 py-4 flex flex-col justify-between h-3/4">
+              {currentParams ? (
+                <Table
+                  columns={columns}
+                  pagination={{
+                    data: histories,
+                    currentPage: currentParams?.page,
+                    lastPage: currentParams?.lastPage,
+                    total: currentParams?.total,
+                    from: currentParams?.from,
+                    to: currentParams?.to,
+                    onPageChange: onChangePage,
+                  }}
+                />
+              ) : null}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
