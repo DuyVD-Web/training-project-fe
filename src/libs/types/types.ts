@@ -33,7 +33,10 @@ export type PaginationResponse = {
         next: string | null;
       };
     };
-    [key: string]: unknown; // For additional data properties
+    sort?: string;
+    field?: string;
+    types?: string[];
+    [key: string]: unknown;
   };
 };
 
@@ -92,7 +95,11 @@ export type ToastContextType = {
   hideToast: () => void;
 };
 
-export type NavLinkProps = {
-  isActive: boolean;
-  isPending: boolean;
+export type PaginationProps = {
+  currentPage: number;
+  lastPage: number;
+  total: number;
+  from: number;
+  to: number;
+  onPageChange: (page: number) => void;
 };

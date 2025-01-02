@@ -10,7 +10,7 @@ export const NavBar = () => {
   const { showToast } = useToast();
 
   async function handleLogout() {
-    const response = await baseRequest("post", "/api/logout");
+    const response = await baseRequest("post", "/logout");
     if (response.code === 500) {
       showToast(response.message, "error");
     } else {

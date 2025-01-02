@@ -6,11 +6,6 @@ import { getUser } from "../libs/user/user.ts";
 
 function Layout(props: { children: ReactElement }) {
   const { user, setUserInfo } = useUser();
-  //   const { data, isLoading, error } = useQuery({
-  //     queryFn: () => {
-  //       return getUser();
-  //     },
-  //   });
 
   const { isLoggedIn } = useAuth();
 

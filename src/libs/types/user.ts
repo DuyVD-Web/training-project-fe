@@ -45,3 +45,27 @@ export type AvatarUploadProps = {
   currentAvatar?: string;
   onSave: (newAvatarUrl: string) => void;
 };
+
+export type AccessHistoryState = {
+  types: string[];
+  year?: string;
+  month?: string;
+  day?: string;
+  sort: "asc" | "desc";
+  page: number;
+  years: string[];
+  lastPage: number;
+  perPage: number;
+  total: number;
+  from: number;
+  to: number;
+};
+
+export type History = {
+  type: string;
+  ip_address: string;
+  browser: string;
+  platform: string;
+  device: string;
+  time: string;
+};
