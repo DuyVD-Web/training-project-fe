@@ -108,6 +108,7 @@ export type TableProps<T> = {
   columns: ColumnProps[];
   pagination: {
     data: T[];
+    isLoading: boolean;
     currentPage: number;
     lastPage: number;
     total: number;
@@ -124,4 +125,21 @@ export type ColumnProps = {
     asc: boolean;
     onClick: () => void;
   };
+};
+
+export type DateSelectsProps = {
+  currentParams: {
+    year?: string | number;
+    month?: string | number;
+    day?: string | number;
+  };
+  onDateChange: (field: "year" | "month" | "day", value: string) => void;
+};
+
+export type SelectProps = {
+  name: string;
+  value: string | number | undefined;
+  onChange: (value: string) => void;
+  width: string;
+  options: Array<{ value: string | number; label: string | number }>;
 };

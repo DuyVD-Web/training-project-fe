@@ -1,5 +1,7 @@
 import React from "react";
-import { PaginationProps } from "../libs/types/types";
+import { PaginationProps } from "../../libs/types/types";
+import GreaterThanIcon from "../icon/GreaterThanIcon";
+import LessThanIcon from "../icon/LessThanIcon";
 
 const PaginationLink = ({
   currentPage,
@@ -23,19 +25,7 @@ const PaginationLink = ({
             currentPage <= 1 ? "" : "hover:bg-gray-50"
           }`}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <LessThanIcon />
         </button>
 
         {Array.from({ length: lastPage }, (_, i) => i + 1)
@@ -70,19 +60,7 @@ const PaginationLink = ({
             currentPage >= lastPage ? "" : "hover:bg-gray-50"
           }`}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+          <GreaterThanIcon />
         </button>
       </div>
     </div>

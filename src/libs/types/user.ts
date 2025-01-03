@@ -48,17 +48,17 @@ export type AvatarUploadProps = {
 
 export type AccessHistoryState = {
   types: string[];
+  years: string[];
+  page?: number;
+  lastPage?: number;
+  perPage?: number;
+  total?: number;
+  from?: number;
+  to?: number;
   year?: string;
   month?: string;
   day?: string;
   asc: boolean;
-  page: number;
-  years: string[];
-  lastPage: number;
-  perPage: number;
-  total: number;
-  from: number;
-  to: number;
 };
 
 export type History = {

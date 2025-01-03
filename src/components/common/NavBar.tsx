@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import NavButton from "./NavButton.tsx";
-import baseRequest from "../libs/axios.ts";
-import { useAuth, useToast, useUser } from "../layouts/AppProvider.tsx";
+import baseRequest from "../../libs/axios.ts";
+import { useAuth, useToast, useUser } from "../../layouts/AppProvider.tsx";
 
 export const NavBar = () => {
   const navigate = useNavigate();
