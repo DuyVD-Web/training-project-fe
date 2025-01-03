@@ -1,5 +1,9 @@
 import baseRequest from "../axios.ts";
-import { ErrorResponse, SuccessResponse } from "../types/types.ts";
+import {
+  ErrorResponse,
+  PaginationResponse,
+  SuccessResponse,
+} from "../types/types.ts";
 import {
   ChangeAvatarResponse,
   ChangeEmailFormInput,
@@ -38,5 +42,12 @@ export const updateAvatar = async (data: FormData) => {
   const response = await baseRequest("post", "/user/avatar", data);
   return response.status
     ? (response as ChangeAvatarResponse)
+    : (response as ErrorResponse);
+};
+
+export const getHistory = async (params: string) => {
+  const response = await baseRequest("get", "/user/access-history" + params);
+  return response.status
+    ? (response as PaginationResponse)
     : (response as ErrorResponse);
 };

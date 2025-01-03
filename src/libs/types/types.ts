@@ -33,7 +33,10 @@ export type PaginationResponse = {
         next: string | null;
       };
     };
-    [key: string]: unknown; // For additional data properties
+    sort?: string;
+    field?: string;
+    types?: string[];
+    [key: string]: unknown;
   };
 };
 
@@ -92,7 +95,51 @@ export type ToastContextType = {
   hideToast: () => void;
 };
 
-export type NavLinkProps = {
-  isActive: boolean;
-  isPending: boolean;
+export type PaginationProps = {
+  currentPage: number;
+  lastPage: number;
+  total: number;
+  from: number;
+  to: number;
+  onPageChange: (page: number) => void;
+};
+
+export type TableProps<T> = {
+  columns: ColumnProps[];
+  pagination: {
+    data: T[];
+    isLoading: boolean;
+    currentPage: number;
+    lastPage: number;
+    total: number;
+    from: number;
+    to: number;
+    onPageChange: (page: number) => void;
+  };
+};
+
+export type ColumnProps = {
+  title: string;
+  key: string;
+  sort?: {
+    asc: boolean;
+    onClick: () => void;
+  };
+};
+
+export type DateSelectsProps = {
+  currentParams: {
+    year?: string | number;
+    month?: string | number;
+    day?: string | number;
+  };
+  onDateChange: (field: "year" | "month" | "day", value: string) => void;
+};
+
+export type SelectProps = {
+  name: string;
+  value: string | number | undefined;
+  onChange: (value: string) => void;
+  width: string;
+  options: Array<{ value: string | number; label: string | number }>;
 };

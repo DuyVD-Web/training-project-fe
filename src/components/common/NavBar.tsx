@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import NavButton from "./NavButton.tsx";
-import baseRequest from "../libs/axios.ts";
-import { useAuth, useToast, useUser } from "../layouts/AppProvider.tsx";
+import baseRequest from "../../libs/axios.ts";
+import { useAuth, useToast, useUser } from "../../layouts/AppProvider.tsx";
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const NavBar = () => {
   const { showToast } = useToast();
 
   async function handleLogout() {
-    const response = await baseRequest("post", "/api/logout");
+    const response = await baseRequest("post", "/logout");
     if (response.code === 500) {
       showToast(response.message, "error");
     } else {

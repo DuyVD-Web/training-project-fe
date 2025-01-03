@@ -7,6 +7,7 @@ import Layout from "./layouts/Layout.tsx";
 import UserPage from "./pages/UserPage.tsx";
 import UserInformation from "./components/user/UserInformation.tsx";
 import EmailChange from "./components/user/EmailChange.tsx";
+import AccessHistory from "./components/user/AccessHistory.tsx";
 
 function AdminPage() {
   return null;
@@ -37,6 +38,7 @@ export const Router = () => {
       >
         <Route path={"info"} element={<UserInformation />} />
         <Route path={"email"} element={<EmailChange />} />
+        <Route path={"history"} element={<AccessHistory />} />
       </Route>
       <Route
         path={"/admin"}

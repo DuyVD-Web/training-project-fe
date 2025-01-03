@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { getCookie, removeCookie, setCookie } from "../utils/Cookie";
-import Toast from "../components/Toast";
+import Toast from "../components/common/Toast.tsx";
 import { AUTH_ACTIONS } from "../libs/constants/auth.ts";
 import {
   AuthAction,
