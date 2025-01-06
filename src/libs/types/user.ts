@@ -55,10 +55,11 @@ export type AccessHistoryState = {
   total?: number;
   from?: number;
   to?: number;
-  year?: string;
+  year?: string[] | number[];
   month?: string;
   day?: string;
   asc: boolean;
+  pageSize: number;
 };
 
 export type History = {

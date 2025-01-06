@@ -12,6 +12,7 @@ const AccessHistory = () => {
     years: [],
     page: 1,
     asc: false,
+    pageSize: 5,
   });
   const [histories, setHistories] = useState<History[]>([]);
   const { showToast } = useToast();
@@ -52,12 +53,13 @@ const AccessHistory = () => {
     const searchParams = new URLSearchParams(window.location.search);
     return {
       types: searchParams.getAll("types[]"),
-      year: searchParams.get("year") || undefined,
+      year: searchParams.getAll("year[]") || [],
       month: searchParams.get("month") || undefined,
       day: searchParams.get("day") || undefined,
       asc: searchParams.get("sort") === "asc",
       page: parseInt(searchParams.get("page") || "1"),
       field: searchParams.get("field") || "time",
+      pageSize: searchParams.get("pageSize"),
     };
   }, []);
 
@@ -69,14 +71,18 @@ const AccessHistory = () => {
       searchParams.append("types[]", type);
     });
 
-    if (params.year) searchParams.set("year", params.year.toString());
-    else searchParams.delete("year");
+    searchParams.delete("year[]");
+    params.year?.forEach((year) => {
+      searchParams.append("year[]", year.toString());
+    });
 
     if (params.month) searchParams.set("month", params.month.toString());
     else searchParams.delete("month");
 
     if (params.day) searchParams.set("day", params.day.toString());
     else searchParams.delete("day");
+
+    searchParams.set("pageSize", (params.pageSize || 5).toString());
 
     searchParams.set("sort", params.asc ? "asc" : "desc");
     searchParams.set("page", (params.page || 1).toString());
@@ -93,6 +99,7 @@ const AccessHistory = () => {
       day: params.day || currentParams?.day,
       asc: params.asc ?? currentParams?.asc ?? false,
       page: params.page || currentParams?.page || 1,
+      pageSize: params.pageSize || currentParams?.page || 5,
     }));
 
     fetchData(searchParams.toString());
@@ -118,6 +125,7 @@ const AccessHistory = () => {
             total: result.data.meta.total,
             from: result.data.meta.from,
             to: result.data.meta.to,
+            pageSize: result.data.meta.pageSize,
           };
           return newParams;
         });
@@ -139,13 +147,22 @@ const AccessHistory = () => {
     }
   };
 
-  const handleDateChange = (field: "year" | "month" | "day", value: string) => {
-    if (!currentParams) return;
+  const onChangePageSize = (pageSize: number) => {
+    if (currentParams) {
+      updateURL({ ...currentParams, pageSize });
+    }
+  };
 
-    setParams({
-      ...currentParams,
-      [field]: value || undefined,
-      page: 1,
+  const handleDateChange = (
+    field: "year" | "month" | "day",
+    value: string | string[]
+  ) => {
+    if (!currentParams) return;
+    setParams((prev) => {
+      return {
+        ...prev,
+        [field]: value || undefined,
+      };
     });
   };
 
@@ -189,7 +206,7 @@ const AccessHistory = () => {
           <div className="flex gap-1 items-center w-[50%]">
             <DateSelects
               currentParams={{
-                year: currentParams.year,
+                year: currentParams.year as number[],
                 month: currentParams.month,
                 day: currentParams.day,
               }}
@@ -197,7 +214,7 @@ const AccessHistory = () => {
             />
 
             <button
-              className="bg-blue-500 text-white px-2 py-1 rounded"
+              className="bg-blue-500 text-white px-4 py-3  rounded"
               onClick={handleSearch}
             >
               Search
@@ -250,6 +267,8 @@ const AccessHistory = () => {
                 to: currentParams.to,
                 onPageChange: onChangePage,
                 isLoading: isLoading,
+                pageSize: currentParams.pageSize,
+                onPageSizeChange: onChangePageSize,
               }}
             />
           )}

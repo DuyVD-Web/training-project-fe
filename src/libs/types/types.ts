@@ -20,6 +20,7 @@ export type PaginationResponse = {
   status: boolean;
   data: {
     meta: {
+      pageSize: number;
       currentPage: number;
       lastPage: number;
       total: number;
@@ -102,6 +103,8 @@ export type PaginationProps = {
   from: number;
   to: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange: (page: number) => void;
+  pageSize: number;
 };
 
 export type TableProps<T> = {
@@ -114,6 +117,8 @@ export type TableProps<T> = {
     total: number;
     from: number;
     to: number;
+    pageSize: number;
+    onPageSizeChange: (pageSize: number) => void;
     onPageChange: (page: number) => void;
   };
 };
@@ -129,7 +134,7 @@ export type ColumnProps = {
 
 export type DateSelectsProps = {
   currentParams: {
-    year?: string | number;
+    year?: string[] | number[];
     month?: string | number;
     day?: string | number;
   };
@@ -142,4 +147,15 @@ export type SelectProps = {
   onChange: (value: string) => void;
   width: string;
   options: Array<{ value: string | number; label: string | number }>;
+};
+
+export type MultiSelectProps<T> = {
+  options: T[];
+  onChange: (value: T[]) => void;
+  value: T[];
+};
+
+export type MultiSelectOption = {
+  value: string | number;
+  label: string | number;
 };

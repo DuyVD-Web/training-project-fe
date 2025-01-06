@@ -1,4 +1,5 @@
 import { DateSelectsProps } from "../../libs/types/types";
+import MultiSelect from "./Multiselect";
 import Select from "./Select";
 
 const DateSelects = ({ currentParams, onDateChange }: DateSelectsProps) => {
@@ -25,14 +26,21 @@ const DateSelects = ({ currentParams, onDateChange }: DateSelectsProps) => {
     label: day,
   }));
 
+  const selectedYearOptions = yearOptions.filter((option) =>
+    currentParams.year?.includes(option.value.toString())
+  );
+
   return (
     <>
-      <Select
-        name="year"
-        value={currentParams.year}
-        onChange={(value) => onDateChange("year", value)}
-        width="w-[30%]"
+      <MultiSelect
         options={yearOptions}
+        value={selectedYearOptions}
+        onChange={(value) => {
+          onDateChange(
+            "year",
+            value.map((opt) => opt.value)
+          );
+        }}
       />
 
       <Select

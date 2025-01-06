@@ -30,8 +30,8 @@ const Table = <T extends Record<string, string>>(props: TableProps<T>) => {
   };
 
   const renderHeads = () => {
-    return props.columns.map((column) => (
-      <th className="text-left p-3 px-5">
+    return props.columns.map((column, index) => (
+      <th className="text-left p-3 px-5" key={`col-${index}`}>
         <div className="inline-block">{column.title}</div>
         {column.sort ? (
           <button
@@ -57,6 +57,8 @@ const Table = <T extends Record<string, string>>(props: TableProps<T>) => {
         from={props.pagination.from}
         to={props.pagination.to}
         onPageChange={props.pagination.onPageChange}
+        pageSize={props.pagination.pageSize}
+        onPageSizeChange={props.pagination.onPageSizeChange}
       />
     );
   };

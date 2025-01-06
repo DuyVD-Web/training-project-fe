@@ -4,7 +4,7 @@ const Select = ({ name, value, onChange, width, options }: SelectProps) => (
   <select
     name={name}
     id={name}
-    className={`${width} border-2 border-gray-400 rounded py-1`}
+    className={`${width} border-2 border-gray-400 rounded py-3`}
     value={value || ""}
     onChange={(e) => onChange(e.target.value)}
   >
