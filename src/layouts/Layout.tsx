@@ -1,16 +1,11 @@
 import { ReactElement, useEffect } from "react";
-import { NavBar } from "../components/NavBar.tsx";
-import SideBar from "../components/SideBar.tsx";
+import { NavBar } from "../components/common/NavBar.tsx";
+import SideBar from "../components/common/SideBar.tsx";
 import { useAuth, useUser } from "./AppProvider.tsx";
 import { getUser } from "../libs/user/user.ts";
 
 function Layout(props: { children: ReactElement }) {
   const { user, setUserInfo } = useUser();
-  //   const { data, isLoading, error } = useQuery({
-  //     queryFn: () => {
-  //       return getUser();
-  //     },
-  //   });
 
   const { isLoggedIn } = useAuth();
 
