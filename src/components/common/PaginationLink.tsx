@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PaginationProps } from "../../libs/types/types";
 import GreaterThanIcon from "../icon/GreaterThanIcon";
 import LessThanIcon from "../icon/LessThanIcon";
@@ -15,20 +15,10 @@ const PaginationLink = ({
 }: PaginationProps) => {
   const [localPageSize, setLocalPageSize] = useState(pageSize);
 
-  useEffect(() => {
-    setLocalPageSize(pageSize);
-  }, [pageSize]);
-
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = parseInt(e.target.value);
     if (!isNaN(newSize) && newSize > 0) {
       setLocalPageSize(newSize);
-    }
-  };
-
-  const handleUpdateClick = () => {
-    if (localPageSize !== pageSize) {
-      onPageSizeChange(localPageSize);
     }
   };
 

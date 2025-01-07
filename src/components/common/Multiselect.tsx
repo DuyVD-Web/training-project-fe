@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MultiSelectOption, MultiSelectProps } from "../../libs/types/types";
 
 const MultiSelect = <T extends MultiSelectOption>(
@@ -9,12 +9,29 @@ const MultiSelect = <T extends MultiSelectOption>(
   const [selectedOptions, setSelectedOptions] = useState(
     options.filter((opt) => value.includes(opt))
   );
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (value.length != 0) {
       setSelectedOptions(options.filter((opt) => value.includes(opt)));
     }
   }, [value, options]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSelect = (e) => {
     const newValue = parseInt(e.target.value);
@@ -24,7 +41,6 @@ const MultiSelect = <T extends MultiSelectOption>(
       const newSelected = [...selectedOptions, option];
       setSelectedOptions(newSelected);
       onChange(newSelected);
-      setIsOpen(false);
     }
   };
 
@@ -42,9 +58,9 @@ const MultiSelect = <T extends MultiSelectOption>(
   );
 
   return (
-    <div className="relative w-[50%]">
+    <div className="relative w-[50%]" ref={wrapperRef}>
       <div
-        className="min-h-10 w-full border-2 border-gray-300 rounded-md p-2 cursor-pointer"
+        className="min-h-10 w-full border-2 border-gray-400 rounded p-2 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex gap-2 overflow-auto">

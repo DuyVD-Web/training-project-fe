@@ -167,9 +167,18 @@ const AccessHistory = () => {
   };
 
   const handleSearch = () => {
-    if (currentParams) {
+    if (currentParams && isDateValid()) {
       updateURL(currentParams);
     }
+  };
+
+  const isDateValid = () => {
+    if (currentParams.year?.length !== 0) {
+      if (currentParams.month) return true;
+      else if (currentParams.day) return false;
+      return true;
+    } else if (!currentParams.month && !currentParams.day) return true;
+    else return false;
   };
 
   const handleTypeFilter = (type: string, checked: boolean) => {
@@ -214,8 +223,9 @@ const AccessHistory = () => {
             />
 
             <button
-              className="bg-blue-500 text-white px-4 py-3  rounded"
+              className={`bg-blue-500 text-white px-4 py-3  rounded disabled:opacity-50`}
               onClick={handleSearch}
+              disabled={!isDateValid()}
             >
               Search
             </button>
