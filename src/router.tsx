@@ -8,10 +8,8 @@ import UserPage from "./pages/UserPage.tsx";
 import UserInformation from "./components/user/UserInformation.tsx";
 import EmailChange from "./components/user/EmailChange.tsx";
 import AccessHistory from "./components/user/AccessHistory.tsx";
-
-function AdminPage() {
-  return null;
-}
+import Users from "./components/admin/Users.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
 
 export const Router = () => {
   return (
@@ -41,13 +39,15 @@ export const Router = () => {
         <Route path={"history"} element={<AccessHistory />} />
       </Route>
       <Route
-        path={"/admin"}
+        path="/admin"
         element={
           <Layout>
             <AdminPage />
           </Layout>
         }
-      ></Route>
+      >
+        <Route path={"users"} element={<Users />} />
+      </Route>
     </Routes>
   );
 };

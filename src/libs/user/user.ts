@@ -51,3 +51,10 @@ export const getHistory = async (params: string) => {
     ? (response as PaginationResponse)
     : (response as ErrorResponse);
 };
+
+export const getUsers = async (params: string) => {
+  const response = await baseRequest("get", "/admin/users" + params);
+  return response.status
+    ? (response as PaginationResponse)
+    : (response as ErrorResponse);
+};
