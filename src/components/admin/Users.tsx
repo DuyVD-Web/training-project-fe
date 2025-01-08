@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUsers } from "../../libs/user/user";
+import {
+  deleteUser,
+  exportUsers,
+  getUsers,
+  importUsers,
+} from "../../libs/user/user";
 import { useToast } from "../../layouts/AppProvider";
 import { UsersParamsType, UsersType } from "../../libs/types/admin";
 import Table from "../common/Table";
 import { ColumnProps } from "../../libs/types/types";
 import Filters from "../common/Filters";
+import SearchIcon from "../icon/SearchIcon";
+import FileUploadForm from "../common/FileUploadForm";
+import { useNavigate } from "react-router";
 
 const Users = () => {
   const { showToast } = useToast();
+  const navigate = useNavigate();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
   const [currentParams, setCurrentParams] = useState<UsersParamsType | null>({
     types: [],
     page: 1,
@@ -30,6 +41,40 @@ const Users = () => {
       search: searchParams.get("search"),
     } as unknown as Partial<UsersParamsType>;
   }, []);
+
+  const deleteConfirn = () => {};
+
+  const deleteUserApi = async (id: number) => {
+    const result = await deleteUser(id.toString());
+    if ("errors" in result) {
+      showToast(result.message || "Something went wrong.", "error");
+      return;
+    }
+    if (result.status) {
+      showToast("Delete successful.");
+      setUsers((prev) => {
+        return prev.filter((user) => user.id != id.toString());
+      });
+    }
+    setShowConfirmDialog(false);
+    setUserToDelete(null);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setUserToDelete(id);
+    setShowConfirmDialog(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowConfirmDialog(false);
+    setUserToDelete(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (userToDelete) {
+      deleteUserApi(userToDelete);
+    }
+  };
 
   const updateURL = useCallback((params: Partial<UsersParamsType>) => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -120,6 +165,20 @@ const Users = () => {
     {
       title: "Actions",
       key: "action",
+      buttons: [
+        {
+          title: "Delete",
+          onClick: handleDeleteClick,
+          class:
+            "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
+        },
+        {
+          title: "Edit",
+          onClick: () => {},
+          class:
+            "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
+        },
+      ],
     },
   ];
 
@@ -210,11 +269,60 @@ const Users = () => {
     });
   };
 
+  const importFile = async (file: FormData) => {
+    const result = await importUsers(file);
+    if ("errors" in result) {
+      showToast(result.message || "Something went wrong.", "error");
+      return;
+    }
+
+    if (result.status) {
+      showToast(
+        "Importing users. Please go to Import's status to check result."
+      );
+    }
+  };
+
+  const downloadExcelFile = async () => {
+    const response = await exportUsers();
+
+    if ("errors" in response) {
+      const errorMessage = response.message || "Something went wrong.";
+      showToast(errorMessage, "error");
+      return;
+    }
+
+    const filename = `user_list_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+    const blob = new Blob([response], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="grid grid-cols-12 text-gray-900 min-h-fit pr-4 col-start-1 col-end-5">
       <div className="col-start-3 col-end-13">
         <div className="p-4 flex justify-between items-center">
           <h1 className="text-3xl">Users</h1>
+        </div>
+        <div className="p-4 flex justify-between items-center">
+          <button
+            className="mt-4 py-2 bg-blue-700 rounded px-2 text-white"
+            onClick={downloadExcelFile}
+          >
+            Export Users
+          </button>
+          <FileUploadForm apiCall={importFile} />
         </div>
         <div className="p-4 flex justify-between items-center">
           <Filters
@@ -254,21 +362,7 @@ const Users = () => {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
+                <SearchIcon />
               </div>
               <input
                 type="search"
@@ -290,39 +384,16 @@ const Users = () => {
               </button>
             </div>
           </div>
+
+          <button
+            className="rounded bg-blue-700 text-center text-white px-3 h-full py-2"
+            onClick={() => {
+              navigate("/admin/user");
+            }}
+          >
+            New user
+          </button>
         </div>
-
-        {/* <div className="flex items-center border-2 border-gray-500 bg-white w-fit ml-4 p-4 shadow-md">
-          <input
-            id="user"
-            type="checkbox"
-            value="user"
-            checked={currentParams?.types.includes("user")}
-            onChange={(e) => handleTypeFilter("user", e.target.checked)}
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label
-            htmlFor="user"
-            className="ms-2 text-sm font-medium text-gray-900"
-          >
-            User
-          </label>
-
-          <input
-            id="manager"
-            type="checkbox"
-            value="manager"
-            checked={currentParams?.types.includes("manager")}
-            onChange={(e) => handleTypeFilter("manager", e.target.checked)}
-            className="ml-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label
-            htmlFor="manager"
-            className="ms-2 text-sm font-medium text-gray-900"
-          >
-            Manager
-          </label>
-        </div> */}
 
         <div className="px-3 py-4 flex flex-col justify-between h-3/4">
           {currentParams && (
@@ -344,6 +415,31 @@ const Users = () => {
           )}
         </div>
       </div>
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this user? This action cannot be
+              undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleDeleteCancel}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -58,3 +58,27 @@ export const getUsers = async (params: string) => {
     ? (response as PaginationResponse)
     : (response as ErrorResponse);
 };
+
+export const deleteUser = async (id: string) => {
+  const response = await baseRequest("delete", "/admin/user/" + id);
+  return response.status
+    ? (response as PaginationResponse)
+    : (response as ErrorResponse);
+};
+
+export const importUsers = async (file: FormData) => {
+  const response = await baseRequest("post", "/admin/users/import", file);
+  return response.status
+    ? (response as SuccessResponse)
+    : (response as ErrorResponse);
+};
+
+export const exportUsers = async () => {
+  const response = await baseRequest(
+    "get",
+    "/admin/users/export",
+    {},
+    { responseType: "blob" }
+  );
+  return response.status ? response : (response as ErrorResponse);
+};

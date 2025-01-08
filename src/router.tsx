@@ -10,6 +10,7 @@ import EmailChange from "./components/user/EmailChange.tsx";
 import AccessHistory from "./components/user/AccessHistory.tsx";
 import Users from "./components/admin/Users.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
+import CreateNewUser from "./components/admin/CreateNewUser.tsx";
 
 export const Router = () => {
   return (
@@ -47,6 +48,7 @@ export const Router = () => {
         }
       >
         <Route path={"users"} element={<Users />} />
+        <Route path={"user"} element={<CreateNewUser />} />
       </Route>
     </Routes>
   );

@@ -70,3 +70,14 @@ export type History = {
   device: string;
   time: string;
 };
+
+export type CreateNewUserForm = {
+  name: string;
+  email: string;
+  role: "user" | "admin" | "manager";
+  password: string;
+  password_confirmation: string;
+  phone_number?: string;
+  address?: string;
+  avatar?: string | null;
+};

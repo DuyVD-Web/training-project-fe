@@ -27,8 +27,14 @@ const Table = <T extends Record<string, string>>(props: TableProps<T>) => {
                 key={`${rowIndex}-${colIndex}`}
                 className="p-3 px-5 flex justify-end gap-3"
               >
-                {column.buttons.map((button) => (
-                  <button className={button.class} onClick={button.onClick}>
+                {column.buttons.map((button, buttonIndex) => (
+                  <button
+                    key={`button-${rowIndex}-${buttonIndex}`}
+                    className={button.class}
+                    onClick={() => {
+                      button.onClick(item.id as unknown as number);
+                    }}
+                  >
                     {button.title}
                   </button>
                 ))}

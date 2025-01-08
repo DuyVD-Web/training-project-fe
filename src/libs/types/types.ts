@@ -135,7 +135,7 @@ export type ColumnProps = {
 
 export type Button = {
   title: string;
-  onClick: () => void;
+  onClick: (id: number) => void;
   class: string;
 };
 
