@@ -8,7 +8,9 @@ import {
   ChangeAvatarResponse,
   ChangeEmailFormInput,
   ChangePasswordFormInput,
+  CreateNewUserForm,
   EditInfoFormInput,
+  EditUserForm,
   UserInfor,
 } from "../types/user.ts";
 
@@ -81,4 +83,27 @@ export const exportUsers = async () => {
     { responseType: "blob" }
   );
   return response.status ? response : (response as ErrorResponse);
+};
+
+export const getUserById = async (id: string | number) => {
+  const response = await baseRequest("get", "/admin/user/" + id);
+  return response.status
+    ? (response as SuccessResponse)
+    : (response as ErrorResponse);
+};
+export const updateUserById = async (
+  id: string | number,
+  data: EditUserForm
+) => {
+  const response = await baseRequest("put", "/admin/user/" + id, data);
+  return response.status
+    ? (response as SuccessResponse)
+    : (response as ErrorResponse);
+};
+
+export const createNewUser = async (data: FormData) => {
+  const response = await baseRequest("post", "/admin/user/create", data);
+  return response.status
+    ? (response as SuccessResponse)
+    : (response as ErrorResponse);
 };

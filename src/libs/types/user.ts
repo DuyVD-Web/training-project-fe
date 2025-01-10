@@ -79,5 +79,15 @@ export type CreateNewUserForm = {
   password_confirmation: string;
   phone_number?: string;
   address?: string;
+  avatar?: File | null;
+};
+
+export type EditUserForm = {
+  name: string;
+  email: string;
+  role: string;
+  phone_number?: string;
+  address?: string;
   avatar?: string | null;
+  verified: string | null;
 };

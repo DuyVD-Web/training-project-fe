@@ -42,8 +42,6 @@ const Users = () => {
     } as unknown as Partial<UsersParamsType>;
   }, []);
 
-  const deleteConfirn = () => {};
-
   const deleteUserApi = async (id: number) => {
     const result = await deleteUser(id.toString());
     if ("errors" in result) {
@@ -74,6 +72,10 @@ const Users = () => {
     if (userToDelete) {
       deleteUserApi(userToDelete);
     }
+  };
+
+  const handleEditUser = (id: number) => {
+    navigate("/admin/user/" + id);
   };
 
   const updateURL = useCallback((params: Partial<UsersParamsType>) => {
@@ -110,6 +112,7 @@ const Users = () => {
       asc: params.asc ?? currentParams?.asc ?? false,
       page: params.page || currentParams?.page || 1,
       pageSize: params.pageSize || currentParams?.pageSize || 5,
+      search: params.search || "",
     }));
 
     fetchData(searchParams.toString());
@@ -174,7 +177,7 @@ const Users = () => {
         },
         {
           title: "Edit",
-          onClick: () => {},
+          onClick: handleEditUser,
           class:
             "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
         },
@@ -345,9 +348,7 @@ const Users = () => {
               {
                 name: "Verified",
                 value: "verified",
-                checked: currentParams?.verified
-                  ? currentParams.verified
-                  : false,
+                checked: currentParams?.verified,
               },
             ]}
             onChange={handleTypeFilter}
