@@ -13,6 +13,7 @@ import Filters from "../common/Filters";
 import SearchIcon from "../icon/SearchIcon";
 import FileUploadForm from "../common/FileUploadForm";
 import { useNavigate } from "react-router";
+import { DEFAULT_PAGINATION } from "../../libs/constants/common";
 
 const Users = () => {
   const { showToast } = useToast();
@@ -23,7 +24,7 @@ const Users = () => {
     types: [],
     page: 1,
     asc: true,
-    pageSize: 5,
+    pageSize: DEFAULT_PAGINATION,
     field: "name",
   });
   const [users, setUsers] = useState<UsersType[]>([]);
@@ -36,7 +37,7 @@ const Users = () => {
       asc: searchParams.get("sort") !== "desc",
       page: parseInt(searchParams.get("page") || "1"),
       field: searchParams.get("field") || "name",
-      pageSize: searchParams.get("pageSize") || "5",
+      pageSize: searchParams.get("pageSize"),
       verified: searchParams.get("verified"),
       search: searchParams.get("search"),
     } as unknown as Partial<UsersParamsType>;
@@ -194,21 +195,18 @@ const Users = () => {
         showToast("Something went wrong", "error");
         return;
       }
-
-      if ("data" in result) {
-        setCurrentParams((prev) => {
-          return {
-            ...prev,
-            lastPage: result.data.meta.lastPage,
-            perPage: result.data.meta.perPage,
-            total: result.data.meta.total,
-            from: result.data.meta.from,
-            to: result.data.meta.to,
-            pageSize: result.data.meta.perPage,
-          };
-        });
-        setUsers(result.data.users);
-      }
+      setCurrentParams((prev) => {
+        return {
+          ...prev,
+          lastPage: result.data.meta.lastPage,
+          perPage: result.data.meta.perPage,
+          total: result.data.meta.total,
+          from: result.data.meta.from,
+          to: result.data.meta.to,
+          pageSize: result.data.meta.perPage,
+        };
+      });
+      setUsers(result.data.users);
     } finally {
       setLoading(false);
     }
@@ -397,23 +395,28 @@ const Users = () => {
         </div>
 
         <div className="px-3 py-4 flex flex-col justify-between h-3/4">
-          {currentParams && (
-            <Table
-              columns={columns}
-              pagination={{
-                data: users,
-                currentPage: currentParams?.page,
-                lastPage: currentParams.lastPage,
-                total: currentParams.total,
-                from: currentParams.from,
-                to: currentParams.to,
-                onPageChange: onChangePage,
-                isLoading: isLoading,
-                pageSize: currentParams.pageSize,
-                onPageSizeChange: onChangePageSize,
-              }}
-            />
-          )}
+          {currentParams &&
+            currentParams?.page &&
+            currentParams?.lastPage &&
+            currentParams.total &&
+            currentParams.from &&
+            currentParams.to && (
+              <Table
+                columns={columns}
+                pagination={{
+                  data: users,
+                  currentPage: currentParams?.page,
+                  lastPage: currentParams.lastPage,
+                  total: currentParams.total,
+                  from: currentParams.from,
+                  to: currentParams.to,
+                  onPageChange: onChangePage,
+                  isLoading: isLoading,
+                  pageSize: currentParams.pageSize,
+                  onPageSizeChange: onChangePageSize,
+                }}
+              />
+            )}
         </div>
       </div>
       {showConfirmDialog && (

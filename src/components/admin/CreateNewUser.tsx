@@ -5,7 +5,7 @@ import { emailRegex, phoneNumberRegex } from "../../libs/constants/regex";
 import { createNewUser } from "../../libs/user/user";
 import { useToast } from "../../layouts/AppProvider";
 import { useNavigate } from "react-router";
-import defaultAvatar from "../../assets/default-avatar-icon-of-social-media-user-vector.jpg";
+import defaultAvatar from "../../assets/default-avatar-icon-of-social-media-user-vector.webp";
 
 const CreateNewUser = () => {
   const [avatarPreview, setAvatarPreview] = useState<string>("");
