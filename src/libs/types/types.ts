@@ -133,6 +133,7 @@ export type ColumnProps = {
     onClick: () => void;
   };
   buttons?: Button[];
+  renderFunction?: (value: string) => React.ReactNode;
 };
 
 export type Button = {
