@@ -12,6 +12,7 @@ import Users from "./components/admin/Users.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import CreateNewUser from "./components/admin/CreateNewUser.tsx";
 import EditUser from "./components/admin/EditUser.tsx";
+import ImportStatus from "./components/admin/ImportStatus.tsx";
 
 export const Router = () => {
   return (
@@ -51,6 +52,7 @@ export const Router = () => {
         <Route path={"users"} element={<Users />} />
         <Route path={"user"} element={<CreateNewUser />} />
         <Route path={"user/:id"} element={<EditUser />} />
+        <Route path={"import"} element={<ImportStatus />} />
       </Route>
     </Routes>
   );

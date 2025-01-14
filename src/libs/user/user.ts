@@ -8,7 +8,6 @@ import {
   ChangeAvatarResponse,
   ChangeEmailFormInput,
   ChangePasswordFormInput,
-  CreateNewUserForm,
   EditInfoFormInput,
   EditUserForm,
   UserInfor,
