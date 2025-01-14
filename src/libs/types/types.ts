@@ -105,7 +105,7 @@ export type PaginationProps = {
   from: number;
   to: number;
   onPageChange: (page: number) => void;
-  onPageSizeChange: (page: number) => void;
+  onPageSizeChange?: (page: number) => void;
   pageSize: number;
 };
 
@@ -120,7 +120,7 @@ export type TableProps<T> = {
     from: number;
     to: number;
     pageSize: number;
-    onPageSizeChange: (pageSize: number) => void;
+    onPageSizeChange?: (pageSize: number) => void;
     onPageChange: (page: number) => void;
   };
 };

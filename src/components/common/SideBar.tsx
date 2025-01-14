@@ -43,7 +43,7 @@ const AdminNav = () => {
         <StyledNavLink to="/admin/users">Users</StyledNavLink>
       </li>
       <li>
-        <StyledNavLink to="/admin/import" children="Users Import State" />
+        <StyledNavLink to="/admin/import">Import status</StyledNavLink>
       </li>
       <li>
         <StyledNavLink
