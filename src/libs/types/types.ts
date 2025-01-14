@@ -130,6 +130,13 @@ export type ColumnProps = {
     asc: boolean;
     onClick: () => void;
   };
+  buttons?: Button[];
+};
+
+export type Button = {
+  title: string;
+  onClick: (id: number) => void;
+  class: string;
 };
 
 export type DateSelectsProps = {
@@ -158,4 +165,14 @@ export type MultiSelectProps<T> = {
 export type MultiSelectOption = {
   value: string | number;
   label: string | number;
+};
+
+export type FiltersProps = {
+  filters: FilterProps[];
+  onChange: (name: string, e: boolean) => void;
+};
+export type FilterProps = {
+  name: string;
+  value: string;
+  checked: boolean;
 };

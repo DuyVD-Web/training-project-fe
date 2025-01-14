@@ -39,7 +39,7 @@ const Toast = ({ message, onClose, type = "success" }: ToastProps) => {
       className={`
                 flex fixed top-[80px] right-14 items-center w-full max-w-xs p-4 mb-4 
                 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 
-                dark:bg-gray-800 transition-all duration-300 ease-in-out
+                dark:bg-gray-800 transition-all duration-300 ease-in-out z-50
                 ${
                   isVisible
                     ? "opacity-100 translate-x-0"

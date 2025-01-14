@@ -20,11 +20,32 @@ const Table = <T extends Record<string, string>>(props: TableProps<T>) => {
 
     return props.pagination.data.map((item, rowIndex) => (
       <tr key={rowIndex} className="border-b bg-gray-100">
-        {props.columns.map((column, colIndex) => (
-          <td key={`${rowIndex}-${colIndex}`} className="p-3 px-5">
-            {item[column.key]}
-          </td>
-        ))}
+        {props.columns.map((column, colIndex) => {
+          if (column.buttons)
+            return (
+              <td
+                key={`${rowIndex}-${colIndex}`}
+                className="p-3 px-5 flex justify-end gap-3"
+              >
+                {column.buttons.map((button, buttonIndex) => (
+                  <button
+                    key={`button-${rowIndex}-${buttonIndex}`}
+                    className={button.class}
+                    onClick={() => {
+                      button.onClick(item.id as unknown as number);
+                    }}
+                  >
+                    {button.title}
+                  </button>
+                ))}
+              </td>
+            );
+          return (
+            <td key={`${rowIndex}-${colIndex}`} className="p-3 px-5">
+              {item[column.key]}
+            </td>
+          );
+        })}
       </tr>
     ));
   };
