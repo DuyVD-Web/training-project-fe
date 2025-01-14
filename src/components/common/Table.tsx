@@ -42,7 +42,9 @@ const Table = <T extends Record<string, string>>(props: TableProps<T>) => {
             );
           return (
             <td key={`${rowIndex}-${colIndex}`} className="p-3 px-5">
-              {item[column.key]}
+              {column.renderFunction === undefined
+                ? item[column.key]
+                : column.renderFunction(item[column.key])}
             </td>
           );
         })}

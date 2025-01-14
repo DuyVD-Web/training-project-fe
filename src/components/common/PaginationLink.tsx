@@ -29,21 +29,32 @@ const PaginationLink = ({
       </div>
 
       <div className="flex items-center gap-1">
-        <button
-          className="bg-blue-500 text-white rounded px-2 py-1 disabled:opacity-50"
-          onClick={() => onPageSizeChange(localPageSize)}
-          disabled={localPageSize === pageSize}
-        >
-          Update
-        </button>
+        {onPageSizeChange === undefined ? (
+          ""
+        ) : (
+          <button
+            className="bg-blue-500 text-white rounded px-2 py-1 disabled:opacity-50"
+            onClick={() => onPageSizeChange(localPageSize)}
+            disabled={localPageSize === pageSize}
+          >
+            Update
+          </button>
+        )}
+
         <div>
           <input
             id="pageSize"
             type="number"
             min="1"
-            className="w-20 text-lg border rounded-md px-3 py-1"
+            className={`w-20 text-lg border rounded-md px-3 py-1 ${
+              onPageSizeChange === undefined
+                ? "[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                : ""
+            }`}
             value={localPageSize}
-            onChange={handlePageSizeChange}
+            onChange={
+              onPageSizeChange === undefined ? () => {} : handlePageSizeChange
+            }
           />
         </div>
         <button
