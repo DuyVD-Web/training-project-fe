@@ -32,7 +32,7 @@ const EmailChange = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="col-start-2 col-end-4 relative"
+      className="col-start-1 col-end-4 relative"
       id="info-form"
       method="POST"
     >

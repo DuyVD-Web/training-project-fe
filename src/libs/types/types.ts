@@ -14,6 +14,8 @@ export type SuccessResponse = {
   data?: unknown;
 };
 
+type ApiResponse = SuccessResponse | ErrorResponse;
+
 export type ToastType = "success" | "error";
 
 export type PaginationResponse = {

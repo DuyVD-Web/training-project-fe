@@ -38,17 +38,12 @@ const PermissionsManage = () => {
   ) => {
     setSelectedPermissions((prev) => {
       const rolePermissions = prev[roleId] || [];
-      if (checked) {
-        return {
-          ...prev,
-          [roleId]: [...rolePermissions, permissionId],
-        };
-      } else {
-        return {
-          ...prev,
-          [roleId]: rolePermissions.filter((id) => id !== permissionId),
-        };
-      }
+      return {
+        ...prev,
+        [roleId]: checked
+          ? [...rolePermissions, permissionId]
+          : rolePermissions.filter((id) => id !== permissionId),
+      };
     });
   };
 
@@ -67,8 +62,6 @@ const PermissionsManage = () => {
       }, {} as { [key: string]: string }),
     } as RolePermissionForm;
 
-    console.log(formattedData);
-
     const response = await patchPermissions(formattedData);
     if ("errors" in response) {
       showToast(response.message || "Something went wrong.", "error");
@@ -80,7 +73,7 @@ const PermissionsManage = () => {
 
   return (
     <>
-      <div className="col-start-2 col-end-5 gap-6 py-10">
+      <div className="col-start-1 col-end-5 gap-6 py-10">
         <h1 className="mb-4 text-lg font-medium leading-none text-gray-900 dark:text-white">
           Permission manage
         </h1>

@@ -22,7 +22,7 @@ function Layout(props: { children: ReactElement }) {
   return (
     <div>
       <NavBar />
-      <div>
+      <div className="flex">
         {user && <SideBar role={user.role} />}
         {props.children}
       </div>

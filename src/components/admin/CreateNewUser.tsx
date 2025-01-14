@@ -69,7 +69,7 @@ const CreateNewUser = () => {
   return (
     <>
       <div className="grid grid-cols-12 text-gray-900 min-h-fit pr-4 col-start-1 col-end-5">
-        <div className="col-start-4 col-end-11">
+        <div className="col-start-1 col-end-11">
           <div className="p-4 flex justify-between items-center">
             <h1 className="text-3xl">New user</h1>
           </div>
