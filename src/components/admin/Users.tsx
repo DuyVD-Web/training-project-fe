@@ -312,7 +312,7 @@ const Users = () => {
 
   return (
     <div className="grid grid-cols-12 text-gray-900 min-h-fit pr-4 col-start-1 col-end-5">
-      <div className="col-start-3 col-end-13">
+      <div className="col-start-1 col-end-13">
         <div className="p-4 flex justify-between items-center">
           <h1 className="text-3xl">Users</h1>
         </div>

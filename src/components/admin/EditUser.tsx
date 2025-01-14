@@ -111,7 +111,7 @@ const EditUser = () => {
   };
 
   return (
-    <div className="col-start-2 col-end-4 relative">
+    <div className="col-start-1 col-end-4 relative">
       <h2 className="mb-7 text-lg font-medium text-gray-900">Edit user</h2>
       {currenForm && currenForm.avatar ? (
         <Avatar currentAvatar={currenForm.avatar} onSave={handleAvatarSave} />

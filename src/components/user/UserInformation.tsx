@@ -142,7 +142,7 @@ const UserInformation = () => {
 
   return (
     <>
-      <div className="col-start-2 col-end-4 relative">
+      <div className="col-start-1 col-end-4 relative">
         {currenForm && currenForm.avatar ? (
           <Avatar currentAvatar={currenForm.avatar} onSave={handleAvatarSave} />
         ) : (
