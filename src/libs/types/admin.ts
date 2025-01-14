@@ -21,3 +21,20 @@ export type UsersType = {
   phoneNumber?: string;
   address?: string;
 };
+
+export type PermissionType = {
+  id: string;
+  name: string;
+};
+
+export type RolePermissionType = {
+  id: string;
+  name: string;
+  allPermissions: PermissionType[];
+  permissions: PermissionType[];
+};
+
+export type RolePermissionForm = {
+  role_id: string;
+  permissions: Record<string, string>;
+};
