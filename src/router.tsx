@@ -41,7 +41,7 @@ const ProtectedRoute = ({
 
   return !hasPermission ? (
     getCookie("authToken") ? (
-      <NotFoundPage />
+      <></>
     ) : (
       <Navigate to="/login" state={{ from: location }} replace />
     )
