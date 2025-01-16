@@ -1,4 +1,4 @@
-import baseRequest from "../axios.ts";
+import baseRequest, { apiRequest } from "@/libs/axios.ts";
 import {
   ErrorResponse,
   PaginationResponse,
@@ -13,10 +13,7 @@ import {
   UserInfor,
 } from "../types/user.ts";
 
-export const getUser = async () => {
-  const response = await baseRequest("get", "/user");
-  return response.data.user as UserInfor;
-};
+export const getUser = () => apiRequest("get", "/user");
 
 export const updateUserInfo = async (data: EditInfoFormInput) => {
   const response = await baseRequest("put", "/user", data);

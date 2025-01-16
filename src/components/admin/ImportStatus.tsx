@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { getStatus } from "../../libs/user/import";
-import { ImportStatusType, ImportStatusState } from "../../libs/types/import";
-import { useToast } from "../../layouts/AppProvider";
-import Table from "../common/Table";
-import { DEFAULT_PAGINATION } from "../../libs/constants/common";
+import { getStatus } from "@/libs/user/import";
+import { ImportStatusType, ImportStatusState } from "@/libs/types/import";
+import Table from "@/components/common/Table";
+import { DEFAULT_PAGINATION } from "@/libs/constants/common";
+import { useToast } from "@/hooks/useToast";
 
 const ImportStatus = () => {
   const [currentState, setState] = useState<ImportStatusState>({

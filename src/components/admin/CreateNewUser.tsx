@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
-import { CreateNewUserForm } from "../../libs/types/user";
+import { CreateNewUserForm } from "@/libs/types/user";
 import { useState } from "react";
-import { emailRegex, phoneNumberRegex } from "../../libs/constants/regex";
-import { createNewUser } from "../../libs/user/user";
-import { useToast } from "../../layouts/AppProvider";
+import { emailRegex, phoneNumberRegex } from "@/libs/constants/regex";
+import { createNewUser } from "@/libs/user/user";
 import { useNavigate } from "react-router";
-import defaultAvatar from "../../assets/default-avatar-icon-of-social-media-user-vector.webp";
+import defaultAvatar from "@/assets/default-avatar-icon-of-social-media-user-vector.webp";
+import { useToast } from "@/hooks/useToast";
 
 const CreateNewUser = () => {
   const [avatarPreview, setAvatarPreview] = useState<string>("");

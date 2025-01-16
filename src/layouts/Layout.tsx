@@ -1,11 +1,14 @@
-import { ReactElement, useEffect } from "react";
-import { NavBar } from "../components/common/NavBar.tsx";
-import SideBar from "../components/common/SideBar.tsx";
-import { useAuth, useUser } from "./AppProvider.tsx";
-import { getUser } from "../libs/user/user.ts";
+import { ReactNode, useEffect } from "react";
+import { NavBar } from "@/components/common/NavBar.tsx";
+import SideBar from "@/components/common/SideBar.tsx";
+import { getUser } from "@/libs/user/user.ts";
+import { useUser } from "@/hooks/useUser";
+import { useAuth } from "@/hooks/useAuth";
+import { usePermissions } from "@/hooks/usePermissons";
 
-function Layout(props: { children: ReactElement }) {
+function Layout(props: { children: ReactNode }) {
   const { user, setUserInfo } = useUser();
+  const { setUserPermssions, permissions } = usePermissions();
 
   const { isLoggedIn } = useAuth();
 
@@ -13,7 +16,10 @@ function Layout(props: { children: ReactElement }) {
     const getUserInfo = async () => {
       if (isLoggedIn) {
         const response = await getUser();
-        setUserInfo(response);
+        setUserInfo(response.data.user);
+        setUserPermssions(
+          response.data.permissions.map(({ apiRoute }) => apiRoute)
+        );
       }
     };
     getUserInfo();
@@ -23,7 +29,9 @@ function Layout(props: { children: ReactElement }) {
     <div>
       <NavBar />
       <div className="flex">
-        {user && <SideBar role={user.role} />}
+        {user && permissions && (
+          <SideBar role={user.role} permissions={permissions} />
+        )}
         {props.children}
       </div>
     </div>

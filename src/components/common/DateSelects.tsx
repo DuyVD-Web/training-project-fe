@@ -1,6 +1,6 @@
-import { DateSelectsProps } from "../../libs/types/types";
-import MultiSelect from "./Multiselect";
-import Select from "./Select";
+import { DateSelectsProps } from "@/libs/types/types";
+import MultiSelect from "@/components/common/Multiselect";
+import Select from "@/components/common/Select";
 
 const DateSelects = ({ currentParams, onDateChange }: DateSelectsProps) => {
   const currentYear = new Date().getFullYear();

@@ -1,4 +1,4 @@
-import { SelectProps } from "../../libs/types/types";
+import { SelectProps } from "@/libs/types/types";
 
 const Select = ({ name, value, onChange, width, options }: SelectProps) => (
   <select

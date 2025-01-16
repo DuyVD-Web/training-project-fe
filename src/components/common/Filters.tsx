@@ -1,4 +1,4 @@
-import { FiltersProps } from "../../libs/types/types";
+import { FiltersProps } from "@/libs/types/types";
 
 const Filters = ({ filters, onChange }: FiltersProps) => {
   return (

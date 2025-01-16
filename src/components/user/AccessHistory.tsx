@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
-import { getHistory } from "../../libs/user/user";
-import { AccessHistoryState, History } from "../../libs/types/user";
-import { useToast } from "../../layouts/AppProvider";
-import Table from "../common/Table";
-import { ColumnProps } from "../../libs/types/types";
-import DateSelects from "../common/DateSelects";
+import { getHistory } from "@/libs/user/user";
+import { AccessHistoryState, History } from "@/libs/types/user";
+import Table from "@/components/common/Table";
+import { ColumnProps } from "@/libs/types/types";
+import DateSelects from "@/components/common/DateSelects";
+import { useToast } from "@/hooks/useToast";
 
 const AccessHistory = () => {
   const [currentParams, setParams] = useState<AccessHistoryState>({
@@ -206,7 +206,7 @@ const AccessHistory = () => {
 
   return (
     <div className="grid grid-cols-12 text-gray-900 min-h-fit pr-4 col-start-1 col-end-5">
-      <div className="col-start-3 col-end-13">
+      <div className="col-start-1 col-end-13">
         <div className="p-4 flex justify-between items-center">
           <h1 className="text-3xl">Access History</h1>
         </div>

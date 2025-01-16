@@ -7,8 +7,8 @@ import {
   ErrorResponse,
   RequestMethod,
   SuccessResponse,
-} from "./types/types.ts";
-import { getCookie } from "../utils/Cookie.ts";
+} from "@/libs/types/types.ts";
+import { getCookie } from "@/utils/Cookie.ts";
 
 const instance = axios.create({
   timeout: import.meta.env.VITE_TIME_OUT_REQUEST,

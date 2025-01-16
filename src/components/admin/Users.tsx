@@ -4,18 +4,27 @@ import {
   exportUsers,
   getUsers,
   importUsers,
-} from "../../libs/user/user";
-import { useToast } from "../../layouts/AppProvider";
-import { UsersParamsType, UsersType } from "../../libs/types/admin";
-import Table from "../common/Table";
-import { ColumnProps } from "../../libs/types/types";
-import Filters from "../common/Filters";
-import SearchIcon from "../icon/SearchIcon";
-import FileUploadForm from "../common/FileUploadForm";
+} from "@/libs/user/user";
+import { UsersParamsType, UsersType } from "@/libs/types/admin";
+import Table from "@/components/common/Table";
+import { ColumnProps } from "@/libs/types/types";
+import Filters from "@/components/common/Filters";
+import SearchIcon from "@/components/icon/SearchIcon";
+import FileUploadForm from "@/components/common/FileUploadForm";
 import { useNavigate } from "react-router";
-import { DEFAULT_PAGINATION } from "../../libs/constants/common";
+import { DEFAULT_PAGINATION } from "@/libs/constants/common";
+import { useToast } from "@/hooks/useToast";
+import { usePermissions } from "@/hooks/usePermissons";
+import {
+  CREATE_USER,
+  DELETE_USER,
+  EXPORT_USERS,
+  IMPORT_USERS,
+  UPDATE_USER,
+} from "@/libs/constants/permissions";
 
 const Users = () => {
+  const { permissions } = usePermissions();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -124,6 +133,23 @@ const Users = () => {
     updateURL(params);
   }, []);
 
+  const actionButtons = [
+    {
+      title: "Delete",
+      permission: DELETE_USER,
+      onClick: handleDeleteClick,
+      class:
+        "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
+    },
+    {
+      title: "Edit",
+      permission: UPDATE_USER,
+      onClick: handleEditUser,
+      class:
+        "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
+    },
+  ];
+
   const columns: ColumnProps[] = [
     {
       title: "Name",
@@ -169,20 +195,9 @@ const Users = () => {
     {
       title: "Actions",
       key: "action",
-      buttons: [
-        {
-          title: "Delete",
-          onClick: handleDeleteClick,
-          class:
-            "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
-        },
-        {
-          title: "Edit",
-          onClick: handleEditUser,
-          class:
-            "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline",
-        },
-      ],
+      buttons: actionButtons
+        .filter((button) => permissions.includes(button.permission))
+        .map(({ ...button }) => button),
     },
   ];
 
@@ -317,13 +332,21 @@ const Users = () => {
           <h1 className="text-3xl">Users</h1>
         </div>
         <div className="p-4 flex justify-between items-center">
-          <button
-            className="mt-4 py-2 bg-blue-700 rounded px-2 text-white"
-            onClick={downloadExcelFile}
-          >
-            Export Users
-          </button>
-          <FileUploadForm apiCall={importFile} />
+          {permissions.includes(EXPORT_USERS) ? (
+            <button
+              className="mt-4 py-2 bg-blue-700 rounded px-2 text-white"
+              onClick={downloadExcelFile}
+            >
+              Export Users
+            </button>
+          ) : (
+            ""
+          )}
+          {permissions.includes(IMPORT_USERS) ? (
+            <FileUploadForm apiCall={importFile} />
+          ) : (
+            ""
+          )}
         </div>
         <div className="p-4 flex justify-between items-center">
           <Filters
@@ -384,39 +407,38 @@ const Users = () => {
             </div>
           </div>
 
-          <button
-            className="rounded bg-blue-700 text-center text-white px-3 h-full py-2"
-            onClick={() => {
-              navigate("/admin/user");
-            }}
-          >
-            New user
-          </button>
+          {permissions.includes(CREATE_USER) ? (
+            <button
+              className="rounded bg-blue-700 text-center text-white px-3 h-full py-2"
+              onClick={() => {
+                navigate("/admin/user");
+              }}
+            >
+              New user
+            </button>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="px-3 py-4 flex flex-col justify-between h-3/4">
-          {currentParams &&
-            currentParams?.page &&
-            currentParams?.lastPage &&
-            currentParams.total &&
-            currentParams.from &&
-            currentParams.to && (
-              <Table
-                columns={columns}
-                pagination={{
-                  data: users,
-                  currentPage: currentParams?.page,
-                  lastPage: currentParams.lastPage,
-                  total: currentParams.total,
-                  from: currentParams.from,
-                  to: currentParams.to,
-                  onPageChange: onChangePage,
-                  isLoading: isLoading,
-                  pageSize: currentParams.pageSize,
-                  onPageSizeChange: onChangePageSize,
-                }}
-              />
-            )}
+          {currentParams && (
+            <Table
+              columns={columns}
+              pagination={{
+                data: users,
+                currentPage: currentParams?.page,
+                lastPage: currentParams.lastPage,
+                total: currentParams.total,
+                from: currentParams.from,
+                to: currentParams.to,
+                onPageChange: onChangePage,
+                isLoading: isLoading,
+                pageSize: currentParams.pageSize,
+                onPageSizeChange: onChangePageSize,
+              }}
+            />
+          )}
         </div>
       </div>
       {showConfirmDialog && (

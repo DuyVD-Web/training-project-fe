@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { ToastType } from "../../libs/types/types.ts";
-import CheckMarkSuccessIcon from "../icon/CheckMarkSuccessIcon.tsx";
-import CrossIconError from "../icon/CrossIconError.tsx";
+import { ToastType } from "@/libs/types/types.ts";
+import CheckMarkSuccessIcon from "@/components/icon/CheckMarkSuccessIcon.tsx";
+import CrossIconError from "@/components/icon/CrossIconError.tsx";
 
 type ToastProps = {
   message: string;

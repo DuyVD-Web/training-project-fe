@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { getUserById, updateUserById } from "../../libs/user/user";
-import { EditUserForm } from "../../libs/types/user";
+import { getUserById, updateUserById } from "@/libs/user/user";
+import { EditUserForm } from "@/libs/types/user";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Avatar from "../user/Avatar";
-import { useToast } from "../../layouts/AppProvider";
+import Avatar from "@/components/user/Avatar";
+import { useToast } from "@/hooks/useToast";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();

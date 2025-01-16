@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SignupFormInput } from "../../libs/types/types.ts";
-import { useToast } from "../AppProvider.tsx";
-import { emailRegex } from "../../libs/constants/regex.ts";
-import baseRequest from "../../libs/axios.ts";
+import { SignupFormInput } from "@/libs/types/types.ts";
+import { emailRegex } from "@/libs/constants/regex.ts";
+import baseRequest from "@/libs/axios.ts";
 import { useState } from "react";
+import { useToast } from "@/hooks/useToast";
 
 export const Signup = () => {
   const {

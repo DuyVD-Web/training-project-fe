@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { getPermissions, patchPermissions } from "../../libs/user/permissions";
-import { RolePermissionForm, RolePermissionType } from "../../libs/types/admin";
-import { useToast } from "../../layouts/AppProvider";
+import { getPermissions, patchPermissions } from "@/libs/user/permissions";
+import { RolePermissionForm, RolePermissionType } from "@/libs/types/admin";
+import { useToast } from "@/hooks/useToast";
+import { usePermissions } from "@/hooks/usePermissons";
+import { UPDATE_PERMISSION } from "@/libs/constants/permissions";
 
 const PermissionsManage = () => {
   const [rolePermissions, setRolePermission] = useState<RolePermissionType[]>(
@@ -11,6 +13,7 @@ const PermissionsManage = () => {
     [key: string]: string[];
   }>({});
   const { showToast } = useToast();
+  const { permissions } = usePermissions();
 
   useEffect(() => {
     const fetchPermissions = async () => {
@@ -36,15 +39,17 @@ const PermissionsManage = () => {
     permissionId: string,
     checked: boolean
   ) => {
-    setSelectedPermissions((prev) => {
-      const rolePermissions = prev[roleId] || [];
-      return {
-        ...prev,
-        [roleId]: checked
-          ? [...rolePermissions, permissionId]
-          : rolePermissions.filter((id) => id !== permissionId),
-      };
-    });
+    if (permissions.includes(UPDATE_PERMISSION)) {
+      setSelectedPermissions((prev) => {
+        const rolePermissions = prev[roleId] || [];
+        return {
+          ...prev,
+          [roleId]: checked
+            ? [...rolePermissions, permissionId]
+            : rolePermissions.filter((id) => id !== permissionId),
+        };
+      });
+    }
   };
 
   const handleSubmit = async (
@@ -123,12 +128,16 @@ const PermissionsManage = () => {
                     ))}
                   </div>
 
-                  <button
-                    type="submit"
-                    className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Update Permissions
-                  </button>
+                  {permissions.includes(UPDATE_PERMISSION) ? (
+                    <button
+                      type="submit"
+                      className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      Update Permissions
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </form>
               </div>
             </div>

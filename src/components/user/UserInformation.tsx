@@ -1,22 +1,24 @@
 import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
-import {
-  changePassword,
-  getUser,
-  updateUserInfo,
-} from "../../libs/user/user.ts";
+import { changePassword, getUser, updateUserInfo } from "@/libs/user/user.ts";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { phoneNumberRegex } from "../../libs/constants/regex.ts";
+import { phoneNumberRegex } from "@/libs/constants/regex.ts";
 import {
   ChangePasswordFormInput,
   EditInfoFormInput,
   InformationForm,
-} from "../../libs/types/user.ts";
-import { useToast } from "../../layouts/AppProvider.tsx";
-import Avatar from "./Avatar.tsx";
+} from "@/libs/types/user.ts";
+import Avatar from "@/components/user/Avatar.tsx";
+import { useToast } from "@/hooks/useToast";
+import { usePermissions } from "@/hooks/usePermissons";
+import {
+  USER_CHANGE_PASSWORD,
+  USER_SEND_CHANGE_EMAIL,
+} from "@/libs/constants/permissions";
 
 const UserInformation = () => {
   const [isEditing, setEditing] = useState(false);
+  const { permissions } = usePermissions();
   const [currenForm, setCurrenForm] = useState<InformationForm | null>(null);
   const {
     register,
@@ -105,11 +107,11 @@ const UserInformation = () => {
       const response = await getUser();
       setCurrenForm({
         ...currenForm,
-        email: response.email,
-        name: response.name,
-        phoneNumber: response.phoneNumber?.toString(),
-        address: response.address,
-        avatar: response.avatar,
+        email: response.data.user.email,
+        name: response.data.user.name,
+        phoneNumber: response.data.user.phoneNumber?.toString(),
+        address: response.data.user.address,
+        avatar: response.data.user.avatar,
       });
     };
     getUserInfo();
@@ -269,125 +271,137 @@ const UserInformation = () => {
           </div>
         )}
       </form>
-      <div className=" col-start-2 col-end-4 h-[2px] bg-gray-300"></div>
-      <div className="col-start-2">
-        <NavLink
-          to={"/user/email"}
-          className="px-3 py-2 rounded bg-blue-700 text-white"
-        >
-          {" "}
-          Change email
-        </NavLink>
-      </div>
+      {permissions.includes(USER_SEND_CHANGE_EMAIL) ? (
+        <>
+          <div className=" col-start-2 col-end-4 h-[2px] bg-gray-300"></div>
+          <div className="col-start-2">
+            <NavLink
+              to={"/user/email"}
+              className="px-3 py-2 rounded bg-blue-700 text-white"
+            >
+              {" "}
+              Change email
+            </NavLink>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
 
-      <div className=" col-start-2 col-end-4 h-[2px] bg-gray-300"></div>
-      <form
-        className="col-start-2 col-end-4 "
-        onSubmit={handleSubmitPassword(onChangePassword)}
-      >
-        <h3 className="mb-4 text-lg font-medium leading-none text-gray-900 dark:text-white">
-          Change Password
-        </h3>
-        <div className="flex w-[75%] gap-4 mb-4 flex-col">
-          {errorsPassword.password && (
-            <p className="text-red-400 mt-1">
-              {errorsPassword.password.message}
-            </p>
-          )}
-          <div>
-            <label
-              htmlFor="current_password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      {permissions.includes(USER_CHANGE_PASSWORD) ? (
+        <>
+          <div className=" col-start-2 col-end-4 h-[2px] bg-gray-300"></div>
+          <form
+            className="col-start-2 col-end-4 "
+            onSubmit={handleSubmitPassword(onChangePassword)}
+          >
+            <h3 className="mb-4 text-lg font-medium leading-none text-gray-900 dark:text-white">
+              Change Password
+            </h3>
+            <div className="flex w-[75%] gap-4 mb-4 flex-col">
+              {errorsPassword.password && (
+                <p className="text-red-400 mt-1">
+                  {errorsPassword.password.message}
+                </p>
+              )}
+              <div>
+                <label
+                  htmlFor="current_password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  {...registerPassword("current_password", {
+                    validate: (value) => {
+                      if (!value) {
+                        return "Please fill all the fields.";
+                      }
+                    },
+                  })}
+                  id="current_password"
+                  className={`bg-gray-50 border ${
+                    errorsPassword.current_password
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
+                />
+                {errorsPassword.current_password && (
+                  <p className="text-red-400 mt-1">
+                    {errorsPassword.current_password.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  {...registerPassword("password", {
+                    required: "Please fill all the fields.",
+                  })}
+                  id="password"
+                  className={`bg-gray-50 border ${
+                    errorsPassword.password ||
+                    errorsPassword.password_confirmation
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
+                />
+                {errorsPassword.password && (
+                  <p className="text-red-400 mt-1">
+                    {errorsPassword.password.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="password_confirmation"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Confirm password
+                </label>
+                <input
+                  type="password"
+                  {...registerPassword("password_confirmation", {
+                    validate: (value) => {
+                      if (watch("password") != value) {
+                        return "Passwords do not match";
+                      }
+                      if (!value) {
+                        return "Please fill all the fields.";
+                      }
+                    },
+                  })}
+                  id="password_confirmation"
+                  className={`bg-gray-50 border ${
+                    errorsPassword.password ||
+                    errorsPassword.password_confirmation
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
+                />
+                {errorsPassword.password_confirmation && (
+                  <p className="text-red-400 mt-1">
+                    {errorsPassword.password_confirmation.message}
+                  </p>
+                )}
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Current Password
-            </label>
-            <input
-              type="password"
-              {...registerPassword("current_password", {
-                validate: (value) => {
-                  if (!value) {
-                    return "Please fill all the fields.";
-                  }
-                },
-              })}
-              id="current_password"
-              className={`bg-gray-50 border ${
-                errorsPassword.current_password
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
-            />
-            {errorsPassword.current_password && (
-              <p className="text-red-400 mt-1">
-                {errorsPassword.current_password.message}
-              </p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              New Password
-            </label>
-            <input
-              type="password"
-              {...registerPassword("password", {
-                required: "Please fill all the fields.",
-              })}
-              id="password"
-              className={`bg-gray-50 border ${
-                errorsPassword.password || errorsPassword.password_confirmation
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
-            />
-            {errorsPassword.password && (
-              <p className="text-red-400 mt-1">
-                {errorsPassword.password.message}
-              </p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="password_confirmation"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Confirm password
-            </label>
-            <input
-              type="password"
-              {...registerPassword("password_confirmation", {
-                validate: (value) => {
-                  if (watch("password") != value) {
-                    return "Passwords do not match";
-                  }
-                  if (!value) {
-                    return "Please fill all the fields.";
-                  }
-                },
-              })}
-              id="password_confirmation"
-              className={`bg-gray-50 border ${
-                errorsPassword.password || errorsPassword.password_confirmation
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5`}
-            />
-            {errorsPassword.password_confirmation && (
-              <p className="text-red-400 mt-1">
-                {errorsPassword.password_confirmation.message}
-              </p>
-            )}
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Change password
-        </button>
-      </form>
+              Change password
+            </button>
+          </form>
+        </>
+      ) : null}
     </>
   );
 };

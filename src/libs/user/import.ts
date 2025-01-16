@@ -1,5 +1,5 @@
-import baseRequest from "../axios";
-import { ErrorResponse, SuccessResponse } from "../types/types";
+import baseRequest from "@/libs/axios";
+import { ErrorResponse, SuccessResponse } from "@/libs/types/types";
 
 export const getStatus = async (params: string) => {
   const response = await baseRequest("get", "/admin/import-status?" + params);
