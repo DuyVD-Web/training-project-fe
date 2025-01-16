@@ -1,76 +1,29 @@
+import Toast from "@/components/common/Toast";
+import { AUTH_ACTIONS } from "@/libs/constants/auth";
+import { ToastType } from "@/libs/types/types";
+import { UserInfor } from "@/libs/types/user";
 import {
-  createContext,
-  ReactNode,
-  useContext,
-  useReducer,
-  useState,
-} from "react";
-import { getCookie, removeCookie, setCookie } from "../utils/Cookie";
-import Toast from "../components/common/Toast.tsx";
-import { AUTH_ACTIONS } from "../libs/constants/auth.ts";
-import {
-  AuthAction,
-  AuthContextType,
-  AuthState,
-  ToastAction,
-  ToastContextType,
-  ToastState,
-  ToastType,
-  UserContextType,
-} from "../libs/types/types.ts";
-import { UserInfor } from "../libs/types/user.ts";
+  AuthContext,
+  PermissionsContext,
+  ToastContext,
+  UserContext,
+} from "@/utils/contexts";
+import { getCookie } from "@/utils/Cookie";
+import { authReducer, toastReducer } from "@/utils/reducers";
+import { ReactNode, useReducer, useState } from "react";
 
-// Reducers
-const authReducer = (state: AuthState, action: AuthAction): AuthState => {
-  switch (action.type) {
-    case AUTH_ACTIONS.LOGIN:
-      setCookie("authToken", action.payload, { path: "/" });
-      return { isLoggedIn: true };
-    case AUTH_ACTIONS.LOGOUT:
-      removeCookie("authToken");
-      return { isLoggedIn: false };
-    default:
-      return state;
-  }
-};
-
-const toastReducer = (state: ToastState, action: ToastAction): ToastState => {
-  switch (action.type) {
-    case "SHOW_TOAST":
-      return {
-        visible: true,
-        message: action.payload.message,
-        type: action.payload.type,
-      };
-    case "HIDE_TOAST":
-      return {
-        visible: false,
-        message: "",
-        type: "success",
-      };
-    default:
-      return state;
-  }
-};
-
-// Context
-const AuthContext = createContext<AuthContextType | null>(null);
-const ToastContext = createContext<ToastContextType | null>(null);
-const UserContext = createContext<UserContextType | null>(null);
-
-// Provider Props
-interface ProviderProps {
-  children: ReactNode;
-}
-
-export function AppProvider({ children }: ProviderProps) {
+export default function AppProvider({ children }: { children: ReactNode }) {
   const [authState, authDispatch] = useReducer(authReducer, {
     isLoggedIn: Boolean(getCookie("authToken")),
   });
   const [user, setUser] = useState<UserInfor | null>(null);
+  const [permissions, setPermissions] = useState<string[]>([]);
 
   const setUserInfo = (user: UserInfor | null) => {
     setUser(user);
+  };
+  const setUserPermssions = (permissions: string[]) => {
+    setPermissions(permissions);
   };
 
   const [toastState, toastDispatch] = useReducer(toastReducer, {
@@ -112,35 +65,29 @@ export function AppProvider({ children }: ProviderProps) {
           setUserInfo,
         }}
       >
-        <ToastContext.Provider
+        <PermissionsContext.Provider
           value={{
-            showToast,
-            hideToast,
+            permissions,
+            setUserPermssions,
           }}
         >
-          {toastState.visible && (
-            <Toast
-              message={toastState.message}
-              type={toastState.type}
-              onClose={hideToast}
-            />
-          )}
-          {children}
-        </ToastContext.Provider>
+          <ToastContext.Provider
+            value={{
+              showToast,
+              hideToast,
+            }}
+          >
+            {toastState.visible && (
+              <Toast
+                message={toastState.message}
+                type={toastState.type}
+                onClose={hideToast}
+              />
+            )}
+            {children}
+          </ToastContext.Provider>
+        </PermissionsContext.Provider>
       </UserContext.Provider>
     </AuthContext.Provider>
   );
-}
-
-// Hooks
-export function useAuth(): AuthContextType {
-  return useContext(AuthContext) as AuthContextType;
-}
-
-export function useToast(): ToastContextType {
-  return useContext(ToastContext) as ToastContextType;
-}
-
-export function useUser(): UserContextType {
-  return useContext(UserContext) as UserContextType;
 }

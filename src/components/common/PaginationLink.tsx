@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { PaginationProps } from "../../libs/types/types";
-import GreaterThanIcon from "../icon/GreaterThanIcon";
-import LessThanIcon from "../icon/LessThanIcon";
+import { PaginationProps } from "@/libs/types/types";
+import GreaterThanIcon from "@/components/icon/GreaterThanIcon";
+import LessThanIcon from "@/components/icon/LessThanIcon";
 
 const PaginationLink = ({
   currentPage,

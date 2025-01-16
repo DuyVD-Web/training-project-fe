@@ -1,5 +1,6 @@
-import { AUTH_ACTIONS } from "../constants/auth.ts";
-import { UserInfor } from "./user.ts";
+import { AUTH_ACTIONS } from "@/libs/constants/auth.ts";
+import { UserInfor } from "@/libs/types/user.ts";
+import { PermissionType } from "./admin";
 
 export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
 
@@ -13,8 +14,6 @@ export type SuccessResponse = {
   status: boolean;
   data?: unknown;
 };
-
-type ApiResponse = SuccessResponse | ErrorResponse;
 
 export type ToastType = "success" | "error";
 
@@ -98,6 +97,11 @@ export type ToastContextType = {
   hideToast: () => void;
 };
 
+export type PermissionsContextType = {
+  setUserPermssions: (permissions: string[]) => void;
+  permissions: string[];
+};
+
 export type PaginationProps = {
   currentPage: number;
   lastPage: number;
@@ -179,3 +183,5 @@ export type FilterProps = {
   value: string;
   checked: boolean;
 };
+
+export type UserPermissions = string[];

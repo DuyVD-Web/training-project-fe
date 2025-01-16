@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import baseRequest from "../../libs/axios.ts";
+import baseRequest from "@/libs/axios.ts";
 import { useState } from "react";
-import { useAuth, useToast, useUser } from "../AppProvider.tsx";
-import { emailRegex } from "../../libs/constants/regex.ts";
-import { LoginFormInput } from "../../libs/types/types.ts";
+import { emailRegex } from "@/libs/constants/regex.ts";
+import { LoginFormInput } from "@/libs/types/types.ts";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/useToast";
+import { useUser } from "@/hooks/useUser";
 
 export const Login = () => {
   const navigate = useNavigate();

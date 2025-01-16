@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MultiSelectOption, MultiSelectProps } from "../../libs/types/types";
+import { MultiSelectOption, MultiSelectProps } from "@/libs/types/types";
 
 const MultiSelect = <T extends MultiSelectOption>(
   props: MultiSelectProps<T>

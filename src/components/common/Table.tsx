@@ -1,6 +1,6 @@
-import { TableProps } from "../../libs/types/types";
-import RotateArrowIcon from "../icon/RotateArrowIcon";
-import PaginationLink from "./PaginationLink";
+import { TableProps } from "@/libs/types/types";
+import RotateArrowIcon from "@/components/icon/RotateArrowIcon";
+import PaginationLink from "@/components/common/PaginationLink";
 import ReactLoading from "react-loading";
 
 const Table = <T extends Record<string, string>>(props: TableProps<T>) => {

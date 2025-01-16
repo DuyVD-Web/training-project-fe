@@ -1,8 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ChangeEmailFormInput } from "../../libs/types/user";
-import { emailRegex } from "../../libs/constants/regex";
-import { changeEmail } from "../../libs/user/user";
-import { useToast } from "../../layouts/AppProvider";
+import { ChangeEmailFormInput } from "@/libs/types/user";
+import { emailRegex } from "@/libs/constants/regex";
+import { changeEmail } from "@/libs/user/user";
+import { useToast } from "@/hooks/useToast";
 
 const EmailChange = () => {
   const {

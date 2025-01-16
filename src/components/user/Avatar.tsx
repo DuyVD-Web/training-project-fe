@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import AvatarEditor from "react-avatar-editor";
-import { updateAvatar } from "../../libs/user/user";
-import { AvatarUploadProps } from "../../libs/types/user";
+import { updateAvatar } from "@/libs/user/user";
+import { AvatarUploadProps } from "@/libs/types/user";
 
 const Avatar: React.FC<AvatarUploadProps> = ({ currentAvatar, onSave }) => {
   const [image, setImage] = useState<File | null>(null);
