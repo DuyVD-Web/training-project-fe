@@ -16,7 +16,9 @@ export const authReducer = (
       setCookie("authToken", action.payload, { path: "/" });
       return { isLoggedIn: true };
     case AUTH_ACTIONS.LOGOUT:
-      removeCookie("authToken");
+      if (action.payload) {
+        removeCookie("authToken");
+      }
       return { isLoggedIn: false };
     default:
       return state;

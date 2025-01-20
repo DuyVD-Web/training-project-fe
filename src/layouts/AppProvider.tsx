@@ -37,7 +37,7 @@ export default function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    authDispatch({ type: AUTH_ACTIONS.LOGOUT });
+    authDispatch({ type: AUTH_ACTIONS.LOGOUT, payload: "" });
   };
 
   const showToast = (message: string, type: ToastType = "success") => {
