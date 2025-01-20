@@ -65,9 +65,7 @@ export type SignupFormInput = {
   password_confirmation: string;
 };
 
-export type AuthAction =
-  | { type: typeof AUTH_ACTIONS.LOGIN; payload: string }
-  | { type: typeof AUTH_ACTIONS.LOGOUT; payload?: string };
+export type AuthAction = { type: typeof AUTH_ACTIONS.LOGIN; payload: string };
 
 export type ToastState = {
   visible: boolean;
