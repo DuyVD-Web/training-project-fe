@@ -73,7 +73,7 @@ const baseRequest = async (
   }
 };
 
-export const apiRequest = async (
+export const apiRequest = async <T>(
   method: RequestMethod,
   url: string,
   data?: object,
@@ -81,7 +81,7 @@ export const apiRequest = async (
 ) => {
   const response = await baseRequest(method, url, data, config);
   return response.status
-    ? (response as SuccessResponse)
+    ? (response as SuccessResponse<T>)
     : (response as ErrorResponse);
 };
 

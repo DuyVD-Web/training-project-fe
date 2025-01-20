@@ -26,9 +26,11 @@ const DateSelects = ({ currentParams, onDateChange }: DateSelectsProps) => {
     label: day,
   }));
 
-  const selectedYearOptions = yearOptions.filter((option) =>
-    currentParams.year?.includes(option.value.toString())
-  );
+  const selectedYearOptions = yearOptions.filter((option) => {
+    if (currentParams.year) {
+      return currentParams.year.includes(option.value.toString());
+    }
+  });
 
   return (
     <>
@@ -38,7 +40,7 @@ const DateSelects = ({ currentParams, onDateChange }: DateSelectsProps) => {
         onChange={(value) => {
           onDateChange(
             "year",
-            value.map((opt) => opt.value)
+            value.map((opt) => opt.value.toString())
           );
         }}
       />

@@ -105,14 +105,16 @@ const UserInformation = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       const response = await getUser();
-      setCurrenForm({
-        ...currenForm,
-        email: response.data.user.email,
-        name: response.data.user.name,
-        phoneNumber: response.data.user.phoneNumber?.toString(),
-        address: response.data.user.address,
-        avatar: response.data.user.avatar,
-      });
+      if ("data" in response) {
+        setCurrenForm({
+          ...currenForm,
+          email: response.data.user.email,
+          name: response.data.user.name,
+          phoneNumber: response.data.user.phoneNumber?.toString(),
+          address: response.data.user.address,
+          avatar: response.data.user.avatar,
+        });
+      }
     };
     getUserInfo();
   }, []);

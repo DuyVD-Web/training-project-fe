@@ -35,6 +35,11 @@ const Users = () => {
     asc: true,
     pageSize: DEFAULT_PAGINATION,
     field: "name",
+    lastPage: 1,
+    total: 1,
+    from: 1,
+    to: 1,
+    verified: false,
   });
   const [users, setUsers] = useState<UsersType[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -47,7 +52,7 @@ const Users = () => {
       page: parseInt(searchParams.get("page") || "1"),
       field: searchParams.get("field") || "name",
       pageSize: searchParams.get("pageSize"),
-      verified: searchParams.get("verified"),
+      verified: searchParams.get("verified") ? true : false,
       search: searchParams.get("search"),
     } as unknown as Partial<UsersParamsType>;
   }, []);
@@ -100,7 +105,7 @@ const Users = () => {
 
     searchParams.delete("verified");
     if (params.verified) {
-      searchParams.set("verified", params.verified ? "1" : "0");
+      searchParams.set("verified", "1");
     }
 
     searchParams.delete("search");
@@ -123,6 +128,7 @@ const Users = () => {
       page: params.page || currentParams?.page || 1,
       pageSize: params.pageSize || currentParams?.pageSize || 5,
       search: params.search || "",
+      verified: params.verified || false,
     }));
 
     fetchData(searchParams.toString());
@@ -130,6 +136,7 @@ const Users = () => {
 
   useEffect(() => {
     const params = parseSearchParams();
+    console.log(params);
     updateURL(params);
   }, []);
 
@@ -210,18 +217,21 @@ const Users = () => {
         showToast("Something went wrong", "error");
         return;
       }
-      setCurrentParams((prev) => {
-        return {
-          ...prev,
-          lastPage: result.data.meta.lastPage,
-          perPage: result.data.meta.perPage,
-          total: result.data.meta.total,
-          from: result.data.meta.from,
-          to: result.data.meta.to,
-          pageSize: result.data.meta.perPage,
-        };
-      });
-      setUsers(result.data.users);
+      if ("data" in result) {
+        setCurrentParams((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            lastPage: result.data.meta.lastPage,
+            perPage: result.data.meta.perPage,
+            total: result.data.meta.total,
+            from: result.data.meta.from,
+            to: result.data.meta.to,
+            pageSize: result.data.meta.perPage,
+          };
+        });
+        setUsers(result.data.users);
+      }
     } finally {
       setLoading(false);
     }
@@ -247,6 +257,7 @@ const Users = () => {
         verified: checked,
         page: 1,
       });
+      console.log(currentParams);
       return;
     }
 
@@ -279,9 +290,12 @@ const Users = () => {
     }
   };
 
-  const onChangeSearchInput = (e) => {
-    setCurrentParams((prev) => {
-      if (prev) return { ...prev, search: e.target.value };
+  const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentParams((prev: UsersParamsType | null) => {
+      if (!prev) {
+        return null;
+      }
+      return { ...prev, search: e.target.value };
     });
   };
 
@@ -369,7 +383,9 @@ const Users = () => {
               {
                 name: "Verified",
                 value: "verified",
-                checked: currentParams?.verified,
+                checked: currentParams?.verified
+                  ? currentParams?.verified
+                  : false,
               },
             ]}
             onChange={handleTypeFilter}
@@ -427,7 +443,7 @@ const Users = () => {
               columns={columns}
               pagination={{
                 data: users,
-                currentPage: currentParams?.page,
+                currentPage: currentParams.page,
                 lastPage: currentParams.lastPage,
                 total: currentParams.total,
                 from: currentParams.from,

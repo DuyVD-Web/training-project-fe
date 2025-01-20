@@ -1,15 +1,15 @@
 export type UsersParamsType = {
   types: string[];
-  page?: number;
-  lastPage?: number;
+  page: number;
+  lastPage: number;
   asc: boolean;
   pageSize: number;
   field: string;
   search?: string;
-  verified?: boolean;
-  total?: number;
-  from?: number;
-  to?: number;
+  verified: boolean;
+  total: number;
+  from: number;
+  to: number;
 };
 
 export type UsersType = {
@@ -20,11 +20,19 @@ export type UsersType = {
   verifiedAt: string;
   phoneNumber?: string;
   address?: string;
+  avatar?: string;
 };
+
+export type UserTypeReturn = { user: UsersType };
 
 export type PermissionType = {
   id: string;
   name: string;
+  apiRoute: string;
+};
+
+export type PermissionTypeReturn = {
+  roles: RolePermissionType[];
 };
 
 export type RolePermissionType = {

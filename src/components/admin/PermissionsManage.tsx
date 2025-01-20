@@ -23,13 +23,17 @@ const PermissionsManage = () => {
         showToast(response.message || "Something went wrong.", "error");
         return;
       }
-      setRolePermission(response.data.roles);
+      if ("data" in response) {
+        setRolePermission(response.data.roles);
 
-      const initialSelectedPermissions: { [key: string]: string[] } = {};
-      response.data.roles.forEach((role: RolePermissionType) => {
-        initialSelectedPermissions[role.id] = role.permissions.map((p) => p.id);
-      });
-      setSelectedPermissions(initialSelectedPermissions);
+        const initialSelectedPermissions: { [key: string]: string[] } = {};
+        response.data.roles.forEach((role: RolePermissionType) => {
+          initialSelectedPermissions[role.id] = role.permissions.map(
+            (p) => p.id
+          );
+        });
+        setSelectedPermissions(initialSelectedPermissions);
+      }
     };
     fetchPermissions();
   }, []);

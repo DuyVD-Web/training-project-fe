@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { getStatus } from "@/libs/user/import";
-import { ImportStatusType, ImportStatusState } from "@/libs/types/import";
+import {
+  ImportStatusType,
+  ImportStatusState,
+  ImportStatusReturn,
+} from "@/libs/types/import";
 import Table from "@/components/common/Table";
 import { DEFAULT_PAGINATION } from "@/libs/constants/common";
 import { useToast } from "@/hooks/useToast";
+import { PaginationResponse } from "@/libs/types/types";
 
 const ImportStatus = () => {
   const [currentState, setState] = useState<ImportStatusState>({
@@ -52,20 +57,20 @@ const ImportStatus = () => {
       showToast(response.message || "Something went wrong.", "error");
       return;
     }
+    const successResponse = response as PaginationResponse<ImportStatusReturn>;
     setState((prev) => {
       const newState = {
         ...prev,
-        page: response.data.meta.currentPage,
-        lastPage: response.data.meta.lastPage,
-        perPage: response.data.meta.perPage,
-        total: response.data.meta.total,
-        from: response.data.meta.from,
-        to: response.data.meta.to,
+        page: successResponse.data.meta.currentPage,
+        lastPage: successResponse.data.meta.lastPage,
+        perPage: successResponse.data.meta.perPage,
+        total: successResponse.data.meta.total,
+        from: successResponse.data.meta.from,
+        to: successResponse.data.meta.to,
       };
-      console.log(newState);
       return newState;
     });
-    setStatuses(response.data.importStatus);
+    setStatuses(successResponse.data.importStatus);
   };
 
   useEffect(() => {
@@ -99,10 +104,13 @@ const ImportStatus = () => {
             {
               title: "Message",
               key: "message",
-              renderFunction: (item) =>
-                item
-                  ?.split("<br/>")
-                  ?.map((line, lineIndex) => <div key={lineIndex}>{line}</div>),
+              renderFunction: (item) => (
+                <div className="max-h-40 overflow-auto">
+                  {item?.split("<br />")?.map((line, lineIndex) => (
+                    <div key={lineIndex}>{line}</div>
+                  ))}
+                </div>
+              ),
             },
             {
               title: "Last updated at",
