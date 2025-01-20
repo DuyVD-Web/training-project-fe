@@ -36,19 +36,21 @@ const EditUser = () => {
           return;
         }
 
-        setCurrenForm((prev) => {
-          const userInfo = {
-            ...prev,
-            name: result.data.user.name,
-            email: result.data.user.email,
-            role: result.data.user.role,
-            phone_number: result.data.user.phoneNumber,
-            avatar: result.data.user.avatar,
-            address: result.data.user.address,
-            verified: result.data.user.verifiedAt,
-          };
-          return userInfo;
-        });
+        if ("data" in result) {
+          setCurrenForm((prev) => {
+            const userInfo = {
+              ...prev,
+              name: result.data.user.name,
+              email: result.data.user.email,
+              role: result.data.user.role,
+              phone_number: result.data.user.phoneNumber,
+              avatar: result.data.user.avatar,
+              address: result.data.user.address,
+              verified: result.data.user.verifiedAt,
+            };
+            return userInfo;
+          });
+        }
       }
     };
     getUser();
@@ -88,7 +90,7 @@ const EditUser = () => {
         return;
       }
 
-      if (response.status) {
+      if (response.status && "data" in response) {
         showToast("Update successfully.");
         setCurrenForm((prev) => {
           const userInfo = {

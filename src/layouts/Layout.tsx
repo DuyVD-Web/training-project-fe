@@ -16,10 +16,14 @@ function Layout(props: { children: ReactNode }) {
     const getUserInfo = async () => {
       if (isLoggedIn) {
         const response = await getUser();
-        setUserInfo(response.data.user);
-        setUserPermssions(
-          response.data.permissions.map(({ apiRoute }) => apiRoute)
-        );
+        if ("data" in response) {
+          setUserInfo(response.data.user);
+          setUserPermssions(
+            response.data.permissions.map(
+              ({ apiRoute }: { apiRoute: string }) => apiRoute
+            )
+          );
+        }
       }
     };
     getUserInfo();

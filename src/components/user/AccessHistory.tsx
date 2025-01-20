@@ -13,6 +13,11 @@ const AccessHistory = () => {
     page: 1,
     asc: false,
     pageSize: 5,
+    perPage: 5,
+    lastPage: 1,
+    total: 1,
+    from: 1,
+    to: 1,
   });
   const [histories, setHistories] = useState<History[]>([]);
   const { showToast } = useToast();
@@ -59,7 +64,9 @@ const AccessHistory = () => {
       asc: searchParams.get("sort") === "asc",
       page: parseInt(searchParams.get("page") || "1"),
       field: searchParams.get("field") || "time",
-      pageSize: searchParams.get("pageSize"),
+      pageSize: searchParams.get("pageSize")
+        ? parseInt(searchParams.get("pageSize") as string, 10)
+        : 0,
     };
   }, []);
 
@@ -215,7 +222,7 @@ const AccessHistory = () => {
           <div className="flex gap-1 items-center w-[50%]">
             <DateSelects
               currentParams={{
-                year: currentParams.year as number[],
+                year: currentParams.year as string[],
                 month: currentParams.month,
                 day: currentParams.day,
               }}

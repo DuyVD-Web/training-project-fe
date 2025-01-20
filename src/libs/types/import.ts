@@ -5,6 +5,10 @@ export type ImportStatusType = {
   createdAt: string;
 };
 
+export type ImportStatusReturn = {
+  importStatus: ImportStatusType[];
+};
+
 export type ImportStatusState = {
   page: number;
   lastPage: number;

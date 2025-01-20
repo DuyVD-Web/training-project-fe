@@ -1,6 +1,5 @@
 import { AUTH_ACTIONS } from "@/libs/constants/auth.ts";
 import { UserInfor } from "@/libs/types/user.ts";
-import { PermissionType } from "./admin";
 
 export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
 
@@ -10,14 +9,14 @@ export type ErrorResponse = {
   errors?: Record<string, string[]>;
   code?: number | string;
 };
-export type SuccessResponse = {
+export type SuccessResponse<T> = {
   status: boolean;
-  data?: unknown;
+  data: T;
 };
 
 export type ToastType = "success" | "error";
 
-export type PaginationResponse = {
+export type PaginationResponse<T> = {
   status: boolean;
   data: {
     meta: {
@@ -38,8 +37,7 @@ export type PaginationResponse = {
     sort?: string;
     field?: string;
     types?: string[];
-    [key: string]: unknown;
-  };
+  } & T;
 };
 
 export type AuthState = {
@@ -148,11 +146,14 @@ export type Button = {
 
 export type DateSelectsProps = {
   currentParams: {
-    year?: string[] | number[];
+    year?: string[];
     month?: string | number;
     day?: string | number;
   };
-  onDateChange: (field: "year" | "month" | "day", value: string) => void;
+  onDateChange: (
+    field: "year" | "month" | "day",
+    value: string | string[]
+  ) => void;
 };
 
 export type SelectProps = {

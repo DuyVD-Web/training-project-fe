@@ -33,8 +33,10 @@ const MultiSelect = <T extends MultiSelectOption>(
     };
   }, []);
 
-  const handleSelect = (e) => {
-    const newValue = parseInt(e.target.value);
+  const handleSelect: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    const newValue = parseInt(
+      (e.currentTarget as HTMLButtonElement).dataset.value || ""
+    );
     const option = options.find((opt) => opt.value === newValue);
 
     if (option) {
@@ -94,6 +96,7 @@ const MultiSelect = <T extends MultiSelectOption>(
               key={option.value}
               value={option.value}
               onClick={handleSelect}
+              data-value={option.value}
               className="w-full text-left px-4 py-2 hover:bg-gray-100"
             >
               {option.label}

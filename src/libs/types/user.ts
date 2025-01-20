@@ -49,12 +49,12 @@ export type AvatarUploadProps = {
 export type AccessHistoryState = {
   types: string[];
   years: string[];
-  page?: number;
-  lastPage?: number;
-  perPage?: number;
-  total?: number;
-  from?: number;
-  to?: number;
+  page: number;
+  lastPage: number;
+  perPage: number;
+  total: number;
+  from: number;
+  to: number;
   year?: string[] | number[];
   month?: string;
   day?: string;
@@ -69,6 +69,11 @@ export type History = {
   platform: string;
   device: string;
   time: string;
+};
+
+export type HistoryReturn = {
+  histories: History[];
+  years: string[];
 };
 
 export type CreateNewUserForm = {
